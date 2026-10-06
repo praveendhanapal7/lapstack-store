@@ -69,11 +69,10 @@ export default async function Home() {
       <section className="block" id="how">
         <div className="wrap">
           <div className="eyebrow">How it works</div>
-          <h2 className="title">Four simple steps</h2>
+          <h2 className="title">Three simple steps</h2>
           <div className="steps">
             <div className="step"><h3>Choose</h3><p>Browse laptops by budget and specs.</p></div>
             <div className="step"><h3>Order</h3><p>Pay securely online.</p></div>
-            <div className="step"><h3>We confirm</h3><p>We call or WhatsApp you to confirm.</p></div>
             <div className="step"><h3>Delivered</h3><p>Packed carefully and shipped to your door.</p></div>
           </div>
         </div>

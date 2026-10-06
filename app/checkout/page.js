@@ -71,7 +71,7 @@ export default function Checkout() {
   if (ready && !items.length) return <div className="wrap empty"><p>Your cart is empty.</p><Link className="btn" href="/laptops">Browse laptops</Link></div>;
   if (user === undefined) return <div className="wrap empty"><p>Loading…</p></div>;
   const steps = (n) => (
-    <ol className="steps">
+    <ol className="cksteps">
       {['Sign in', 'Delivery', 'Pay'].map((t, i) => <li key={t} className={i + 1 < n ? 'done' : i + 1 === n ? 'now' : ''}><i>{i + 1 < n ? '✓' : i + 1}</i>{t}</li>)}
     </ol>
   );
