@@ -119,6 +119,7 @@ export default function Checkout() {
         <div className="panel">
           <h3>Payment</h3>
           <div className="securepay"><b>Secure online payment</b><span>UPI, cards and netbanking via Razorpay</span></div>
+          <p className="paynote">Your payment will show as <b>Forward Marketing</b>, the company that runs Lapstack. It is safe and goes straight to us.</p>
           {!cfg.razorpay ? <div className="err">Online payment is not switched on yet. Add Razorpay keys to enable checkout.</div> : null}
           {lines.map((l) => <div className="sum" key={l.id}><span>{l.p.name} × {l.qty}</span><span>{inr(l.p.price * l.qty)}</span></div>)}
           <div className="sum t"><span>Total</span><span>{inr(total)}</span></div>

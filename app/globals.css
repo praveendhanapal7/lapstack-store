@@ -365,3 +365,5 @@ h2.title,.contact h2,.sellcta h2{font-weight:600;letter-spacing:-.045em}
 .btn.danger{color:#b91c1c;border-color:#fca5a5}
 @media(max-width:860px){.acctlink{display:none}}
 .acctlink{font-weight:600;font-size:15px;margin-right:6px}
+
+.paynote{font-size:13px;line-height:1.45;color:var(--muted);background:#FFFAE6;border:1px solid #F5E3A0;border-radius:12px;padding:10px 12px;margin:0 0 14px}
