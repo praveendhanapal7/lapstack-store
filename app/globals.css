@@ -317,3 +317,20 @@ h2.title,.contact h2,.sellcta h2{font-weight:600;letter-spacing:-.045em}
   .trust b{font-size:15px;margin-bottom:2px}
   .trust span{font-size:13px;line-height:1.35;display:block}
 }
+
+/* mobile hero: swipeable golden product cards */
+.mshow{display:none}
+@media(max-width:860px){
+  .hero .showcase{display:none}
+  .mshow{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;width:100vw;margin:30px calc(50% - 50vw) 0;padding:6px 20px 30px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .mshow::-webkit-scrollbar{display:none}
+  .scard{flex:0 0 84%;scroll-snap-align:center;position:relative;display:block;text-align:left;color:#1d1d1f;border-radius:30px;padding:16px 14px 18px;overflow:hidden;background:radial-gradient(circle at 72% 22%,#FFEB9C 0%,#FFD23F 48%,#F5B800 100%);box-shadow:0 20px 44px rgba(245,184,0,.32),inset 0 1px 0 rgba(255,255,255,.6)}
+  .scard:first-child{margin-left:0}
+  .scard .pill{position:absolute;top:16px;left:16px;z-index:2;background:#1d1d1f;color:#fff;font-size:12px;font-weight:600;letter-spacing:.02em;padding:6px 13px;border-radius:99px}
+  .scard .stage{background:#fcfcfc;border-radius:22px;margin:0 0 14px;padding:34px 6px 4px;box-shadow:0 8px 20px rgba(120,80,0,.18)}
+  .scard img{display:block;width:100%;aspect-ratio:9/7;object-fit:cover;-webkit-mask-image:radial-gradient(ellipse 72% 70% at 50% 50%,#000 60%,transparent 100%);mask-image:radial-gradient(ellipse 72% 70% at 50% 50%,#000 60%,transparent 100%)}
+  .scard .meta{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;padding:0 6px}
+  .scard b{display:block;font-size:17px;letter-spacing:-.02em;line-height:1.2}
+  .scard small{display:block;margin-top:3px;font-size:13px;opacity:.7}
+  .scard .go{flex:none;background:#1d1d1f;color:#fff;border-radius:99px;padding:10px 16px;font-size:14px;font-weight:600;white-space:nowrap}
+}

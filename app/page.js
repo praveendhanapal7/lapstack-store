@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { listProducts, band } from '@/lib/db';
+import { inr } from '@/lib/format';
 import ProductCard from '@/components/ProductCard';
 export const dynamic = 'force-dynamic';
 
@@ -25,6 +26,13 @@ export default async function Home() {
               <a className="btn ghost" href={`https://wa.me/${WA}`}>Chat on WhatsApp</a>
             </div>
           </div>
+          {shots.length ? <div className="mshow">{shots.map((p) => (
+            <Link key={p.id} href={`/laptops/${p.id}`} className="scard">
+              <span className="pill">{p.name.split(' ')[0]}</span>
+              <div className="stage"><img src={p.image} alt={p.name} /></div>
+              <div className="meta"><div><b>{p.name}</b><small>{[p.ram, p.storage].filter(Boolean).join(' · ')}</small></div><span className="go">{inr(p.price)} →</span></div>
+            </Link>
+          ))}</div> : null}
           {shots.length ? <div className="showcase">{shots.map((p, i) => <img key={p.id} src={p.image} alt={p.name} className={'s' + i} />)}</div> : null}
         </div>
       </section>
