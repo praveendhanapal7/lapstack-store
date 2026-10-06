@@ -4,6 +4,20 @@ import { inr } from '@/lib/format';
 import AddToCart from '@/components/AddToCart';
 export const dynamic = 'force-dynamic';
 
+// Shared links (WhatsApp, Instagram) preview the laptop's photo, name and price.
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  const p = await getProduct(Number(id));
+  if (!p || !p.active) return {};
+  const title = `${p.name}: ${inr(p.price)}`;
+  const description = [p.cpu, p.ram, p.storage, p.display].filter(Boolean).join(' · ');
+  return {
+    title: `${title} | Lapstack`,
+    description,
+    openGraph: { title, description, url: `/laptops/${p.id}`, ...(p.image ? { images: [{ url: p.image, alt: p.name }] } : {}) },
+  };
+}
+
 export default async function Detail({ params }) {
   const { id } = await params;
   const p = await getProduct(Number(id));

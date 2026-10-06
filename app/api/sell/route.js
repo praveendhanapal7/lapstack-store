@@ -1,4 +1,5 @@
 import { q } from '@/lib/db';
+import { alertShop } from '@/lib/notify';
 export const dynamic = 'force-dynamic';
 const bad = (error, status = 400) => Response.json({ error }, { status });
 
@@ -25,5 +26,11 @@ export async function POST(req) {
   await q(`INSERT INTO sell_requests (name,phone,email,city,brand,model,cpu,ram,storage,condition,purchase_date,expected_price,notes,photos,bill)
     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)`,
     [name, phone, email, city, brand, model, t('cpu'), t('ram'), t('storage'), t('condition'), t('purchase_date'), price, t('notes'), JSON.stringify(photos), bill]);
+  await alertShop(`New sell request: ${brand} ${model}`, [
+    `${brand} ${model}`, [t('cpu'), t('ram'), t('storage')].filter(Boolean).join(' · '),
+    t('condition') && `Condition: ${t('condition')}`, price && `Expected price: ₹${price.toLocaleString('en-IN')}`,
+    `${photos.length} photo(s)${bill ? ' + bill' : ''}: open the admin panel to view`,
+    '', `${name}, ${phone}${email ? ', ' + email : ''}${city ? ', ' + city : ''}`,
+  ]);
   return Response.json({ ok: true });
 }
