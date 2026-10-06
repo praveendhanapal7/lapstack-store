@@ -5,8 +5,8 @@ import CartProvider from '@/components/CartProvider';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-// Lapstack's own Meta Pixel ID (a number). Leave unset to run no Pixel.
-const PIXEL = (process.env.NEXT_PUBLIC_META_PIXEL_ID || '').replace(/\D/g, '');
+// Lapstack's own Meta Pixel ("Lapstack Pixel" in the Lapstack Meta business portfolio). NEXT_PUBLIC_META_PIXEL_ID can override it.
+const PIXEL = (process.env.NEXT_PUBLIC_META_PIXEL_ID || '3214943238710618').replace(/\D/g, '');
 
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://lapstack.in'),
@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
       </head>
       <body>
-        {/* Meta Pixel: runs only when NEXT_PUBLIC_META_PIXEL_ID is set (Lapstack's own Pixel) */}
+        {/* Meta Pixel */}
         {PIXEL ? (
           <>
             <Script id="meta-pixel" strategy="afterInteractive">{`
