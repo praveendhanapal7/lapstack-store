@@ -15,8 +15,8 @@ export default async function Home() {
       <section className="hero">
         <div className="wrap">
           <div>
-            <div className="eyebrow">Lapstack Certified Refurbished</div>
-            <h1><span className="l1">Premium laptops.</span><span className="l2">Made for everyone.</span></h1>
+            <div className="eyebrow">Lapstack</div>
+            <h1><span className="l1">Premium refurbished laptops.</span><span className="l2">Honest prices.</span></h1>
             <p>Business-class power from Dell, Lenovo, HP and Apple. Tested, trusted, from ₹21,000.</p>
             <div className="cta">
               <Link className="btn" href="/laptops">Shop laptops</Link>

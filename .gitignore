@@ -2,3 +2,5 @@ node_modules
 .next
 data/*.db*
 .env.local
+.DS_Store
+.claude

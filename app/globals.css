@@ -297,3 +297,8 @@ h2.title,.contact h2,.sellcta h2{font-weight:600;letter-spacing:-.045em}
 .hero p{font-size:clamp(19px,2.2vw,26px);font-weight:500;color:#1d1d1f;max-width:640px;letter-spacing:-.02em;margin:24px auto 34px}
 .hero .cta .btn{padding:14px 32px;font-size:17px}
 @media(max-width:860px){.hero{padding-top:56px}.hero h1 .l1,.hero h1 .l2{font-size:clamp(40px,12.5vw,60px)}}
+
+/* hero v6: normal text */
+.hero h1 .l1{font-size:clamp(38px,7.4vw,86px);max-width:15ch;margin-inline:auto}
+.hero h1 .l2{font-size:clamp(38px,7.4vw,86px);background:none;-webkit-text-fill-color:#B88A00;color:#B88A00;margin-top:.06em}
+@media(max-width:860px){.hero h1 .l1,.hero h1 .l2{font-size:clamp(34px,10.5vw,52px)}}
