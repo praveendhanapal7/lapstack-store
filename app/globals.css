@@ -367,3 +367,8 @@ h2.title,.contact h2,.sellcta h2{font-weight:600;letter-spacing:-.045em}
 .acctlink{font-weight:600;font-size:15px;margin-right:6px}
 
 .paynote{font-size:13px;line-height:1.45;color:var(--muted);background:#FFFAE6;border:1px solid #F5E3A0;border-radius:12px;padding:10px 12px;margin:0 0 14px}
+
+.helpbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid #ececf0}
+.helpbar span{font-size:13px;color:var(--muted);width:100%}
+.ok .helpbar{border-top-color:rgba(0,0,0,.12)}
+.ok .helpbar span{color:inherit;opacity:.8}

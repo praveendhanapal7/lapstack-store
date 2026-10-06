@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useAuth, SignIn } from '@/components/Auth';
 import { useCart } from '@/components/CartProvider';
 import { inr } from '@/lib/format';
+import { BUSINESS as B } from '@/lib/business';
 
 const api = async (url, method, body) => {
   const r = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
@@ -13,6 +14,18 @@ const api = async (url, method, body) => {
 };
 const when = (t) => { try { return new Date(t.replace(' ', 'T') + 'Z').toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }); } catch { return ''; } };
 const STATUS = { new: 'Order received', confirmed: 'Confirmed', shipped: 'Shipped', delivered: 'Delivered', cancelled: 'Cancelled' };
+// Call / chat buttons so customers can reach a person about an order or refund.
+function Help({ code, label = 'Need help?' }) {
+  const tel = 'tel:+' + B.whatsapp;
+  const wa = `https://wa.me/${B.whatsapp}?text=${encodeURIComponent(code ? `Hi, I need help with my order ${code}` : 'Hi, I need help with my order')}`;
+  return (
+    <div className="helpbar">
+      <span>{label}</span>
+      <a className="btn ghost sm" href={tel}>Call customer care</a>
+      <a className="btn sm" href={wa} target="_blank" rel="noopener">Chat with an agent</a>
+    </div>
+  );
+}
 const blank = { name: '', phone: '', address: '', city: '', pincode: '' };
 
 export default function Account() {
@@ -56,7 +69,7 @@ function Orders() {
   if (!orders) return <p className="muted">{msg || 'Loading your orders…'}</p>;
   return (
     <div>
-      {msg ? <div className="ok" style={{ marginBottom: 14 }}>{msg}</div> : null}
+      {msg ? <div className="ok" style={{ marginBottom: 14 }}>{msg}<Help label="Questions about your cancellation or refund?" /></div> : null}
       {!orders.length ? <div className="panel"><p>You have no orders yet.</p><Link className="btn" href="/laptops">Browse laptops</Link></div> : null}
       {orders.map((o) => (
         <div className="panel ordercard" key={o.code}>
@@ -72,8 +85,9 @@ function Orders() {
           {o.payment_status === 'refund_pending' ? <p className="small" style={{ color: '#b45309' }}>Refund waiting for our approval. We will email you when it is sent.</p> : null}
           <div className="oacts">
             <Link className="btn ghost sm" href={'/order/' + o.code}>View</Link>
-            {o.cancellable ? <button className="btn ghost sm danger" onClick={() => cancel(o)}>Cancel order</button> : o.order_status === 'shipped' ? <span className="muted small">Shipped orders cannot be cancelled. WhatsApp us for help.</span> : null}
+            {o.cancellable ? <button className="btn ghost sm danger" onClick={() => cancel(o)}>Cancel order</button> : o.order_status === 'shipped' ? <span className="muted small">Shipped orders cannot be cancelled. Please contact us.</span> : null}
           </div>
+          <Help code={o.code} />
         </div>
       ))}
     </div>
