@@ -5,7 +5,7 @@ import { upload as blobUpload } from '@vercel/blob/client';
 import { inr } from '@/lib/format';
 
 const ORDER_ST = ['new', 'confirmed', 'shipped', 'delivered', 'cancelled'];
-const PAY_ST = ['pending', 'paid', 'failed', 'refunded'];
+const PAY_ST = ['pending', 'paid', 'failed', 'refunded', 'refund_pending'];
 const SELL_ST = ['new', 'contacted', 'purchased', 'rejected'];
 const blank = { name: '', cpu: '', ram: '', storage: '', display: '', price: '', stock: 1, image: '', note: '', warranty: false, active: true };
 const post = (url, method, body) => fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });

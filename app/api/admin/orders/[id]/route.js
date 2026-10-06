@@ -2,7 +2,7 @@ import { isAdmin } from '@/lib/auth';
 import { q, tx } from '@/lib/db';
 export const dynamic = 'force-dynamic';
 const STATUSES = ['new', 'confirmed', 'shipped', 'delivered', 'cancelled'];
-const PAY = ['pending', 'paid', 'failed', 'refunded'];
+const PAY = ['pending', 'paid', 'failed', 'refunded', 'refund_pending'];
 
 export async function PATCH(req, { params }) {
   if (!(await isAdmin())) return Response.json({ error: 'Unauthorized' }, { status: 401 });

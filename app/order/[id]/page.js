@@ -20,6 +20,7 @@ export default async function OrderPage({ params }) {
         <p style={{ color: 'var(--muted)', fontSize: 14 }}>Delivering to {o.name}, {o.address}, {o.city} {o.pincode}</p>
       </div>
       <p>We will call or WhatsApp you on {o.phone} to confirm.</p>
+      <p><a className="linkbtn" href="/account">View or cancel this order in my account</a></p>
       <a className="btn" href={`https://wa.me/${WA}?text=${encodeURIComponent('Hi, my order is ' + o.code)}`}>Message us on WhatsApp</a>
     </div>
   );

@@ -1,4 +1,5 @@
 import './globals.css';
+import { AuthProvider } from '@/components/Auth';
 import CartProvider from '@/components/CartProvider';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -19,11 +20,13 @@ export default function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
       </head>
       <body>
-        <CartProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <Header />
+            <main>{children}</main>
+            <Footer />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

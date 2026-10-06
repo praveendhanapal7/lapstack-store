@@ -1,5 +1,6 @@
 'use client';
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react';
+import { useAuth } from './Auth';
 const Ctx = createContext(null);
 export const useCart = () => useContext(Ctx);
 
@@ -7,6 +8,9 @@ export default function CartProvider({ children }) {
   // items: [{id, qty}] — prices/stock always re-read from server
   const [items, setItems] = useState([]);
   const [ready, setReady] = useState(false);
+  const { user } = useAuth();
+  const [synced, setSynced] = useState(false); // true once this browser's cart has been merged with the account cart
+  const wasIn = useRef(false);
   useEffect(() => {
     try { setItems(JSON.parse(localStorage.getItem('ls_cart') || '[]')); } catch {}
     setReady(true);
@@ -14,6 +18,32 @@ export default function CartProvider({ children }) {
   useEffect(() => {
     if (ready) try { localStorage.setItem('ls_cart', JSON.stringify(items)); } catch {}
   }, [items, ready]);
+
+  // Signed in: merge the account cart with this browser's cart, then keep the account cart up to date.
+  useEffect(() => {
+    if (!ready || user === undefined) return;
+    if (!user) {
+      if (wasIn.current) { setItems([]); wasIn.current = false; } // signed out: clear the cart on this device
+      setSynced(false); return;
+    }
+    wasIn.current = true;
+    let live = true;
+    fetch('/api/me/cart', { cache: 'no-store' }).then((r) => r.json()).then((d) => {
+      if (!live) return;
+      setItems((cur) => {
+        const m = new Map();
+        for (const i of [...(d.items || []), ...cur]) m.set(i.id, { id: i.id, qty: Math.max(m.get(i.id)?.qty || 0, i.qty) });
+        return [...m.values()];
+      });
+      setSynced(true);
+    }).catch(() => setSynced(true));
+    return () => { live = false; };
+  }, [ready, user?.id]); // eslint-disable-line
+  useEffect(() => {
+    if (!user || !synced) return;
+    const t = setTimeout(() => fetch('/api/me/cart', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items }) }).catch(() => {}), 600);
+    return () => clearTimeout(t);
+  }, [items, synced, user?.id]); // eslint-disable-line
 
   const add = useCallback((id, qty = 1, max = 99) =>
     setItems((cur) => {

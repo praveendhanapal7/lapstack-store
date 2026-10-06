@@ -1,17 +1,20 @@
 import { q, one, getProduct } from '@/lib/db';
 import { newCode } from '@/lib/orders';
 import { createRazorpayOrder, razorpayEnabled } from '@/lib/razorpay';
+import { getUser } from '@/lib/customer';
 
 export const dynamic = 'force-dynamic';
 const bad = (error, status = 400) => Response.json({ error }, { status });
 
 export async function POST(req) {
+  const user = await getUser();
+  if (!user) return bad('Please sign in to place your order.', 401);
   let body;
   try { body = await req.json(); } catch { return bad('Invalid request'); }
   const c = body.customer || {};
   const name = String(c.name || '').trim();
   const phone = String(c.phone || '').replace(/\D/g, '').slice(-10);
-  const email = String(c.email || '').trim();
+  const email = user.email;
   const address = String(c.address || '').trim();
   const city = String(c.city || '').trim();
   const pincode = String(c.pincode || '').trim();
@@ -22,7 +25,6 @@ export async function POST(req) {
   if (address.length < 5) return bad('Please enter your full address.');
   if (!city) return bad('Please enter your city.');
   if (!/^\d{6}$/.test(pincode)) return bad('Please enter a 6 digit pincode.');
-  if (email && !/^\S+@\S+\.\S+$/.test(email)) return bad('Please enter a valid email or leave it empty.');
   if (!Array.isArray(body.items) || body.items.length === 0) return bad('Your cart is empty.');
   if (!razorpayEnabled()) return bad('Online payment is not available right now. Please try again later or WhatsApp us.');
 
@@ -39,9 +41,16 @@ export async function POST(req) {
   }
 
   const code = newCode();
-  const ins = await one(`INSERT INTO orders (code,name,phone,email,address,city,pincode,items,total,method,payment_status)
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,'pending') RETURNING id`,
-    [code, name, phone, email, address, city, pincode, JSON.stringify(lines), total, method]);
+  const ins = await one(`INSERT INTO orders (code,name,phone,email,address,city,pincode,items,total,method,payment_status,user_id)
+    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,'pending',$11) RETURNING id`,
+    [code, name, phone, email, address, city, pincode, JSON.stringify(lines), total, method, user.id]);
+  if (body.saveAddress) {
+    // Keep the delivery address (and name/phone) in the customer's profile.
+    const dup = await one('SELECT id FROM addresses WHERE user_id=$1 AND address=$2 AND pincode=$3', [user.id, address, pincode]);
+    const n = await one('SELECT COUNT(*)::int AS c FROM addresses WHERE user_id=$1', [user.id]);
+    if (!dup && n.c < 10) await q('INSERT INTO addresses (user_id,name,phone,address,city,pincode,is_default) VALUES ($1,$2,$3,$4,$5,$6,$7)', [user.id, name, phone, address, city, pincode, n.c === 0 ? 1 : 0]);
+    if (!user.name || !user.phone) await q("UPDATE users SET name = CASE WHEN name = '' THEN $1 ELSE name END, phone = CASE WHEN phone = '' THEN $2 ELSE phone END WHERE id = $3", [name, phone, user.id]);
+  }
   const orderId = ins.id;
 
   try {

@@ -2,6 +2,7 @@ import { q, one } from '@/lib/db';
 import { takeStock } from '@/lib/orders';
 import { verifySignature } from '@/lib/razorpay';
 import { alertShop } from '@/lib/notify';
+import { sendMail } from '@/lib/mail';
 import { inr } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
@@ -18,6 +19,10 @@ export async function POST(req) {
   await q("UPDATE orders SET payment_status = 'paid', razorpay_payment_id = $1, order_status = 'confirmed' WHERE id = $2", [b.razorpay_payment_id, o.id]);
   await takeStock(o.id);
   const items = JSON.parse(o.items || '[]');
+  if (o.email) await sendMail({
+    to: o.email, subject: `Order ${o.code} confirmed`,
+    text: `Thank you for your order!\n\nOrder ${o.code}\n${items.map((i) => `${i.qty} × ${i.name}: ${inr(i.price * i.qty)}`).join('\n')}\n\nTotal paid: ${inr(o.total)}\nDelivering to: ${o.name}, ${o.address}, ${o.city} ${o.pincode}\n\nSee or cancel your order any time before it ships: https://lapstack.in/account\n\nLapstack · lapstack.in`,
+  });
   await alertShop(`New paid order ${o.code}: ${inr(o.total)}`, [
     ...items.map((i) => `${i.qty} × ${i.name}: ${inr(i.price * i.qty)}`),
     '', `Total: ${inr(o.total)} (paid online)`,
