@@ -15,7 +15,7 @@ async function shrink(file) {
     return blob ? new File([blob], file.name.replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' }) : file;
   } catch { return file; }
 }
-const up = async (file, tag) => (await upload(`sell/${tag}-${safe(file.name)}`, file, { access: 'public', handleUploadUrl: '/api/blob/upload' })).url;
+const up = async (file, tag) => (await upload(`sell/${tag}-${safe(file.name)}`, file, { access: 'private', handleUploadUrl: '/api/blob/upload' })).url;
 
 const COND = ['Like new', 'Good', 'Fair (visible wear)', 'Needs repair'];
 export default function Sell() {
