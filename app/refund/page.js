@@ -5,7 +5,7 @@ export default function Refund() {
   return (
     <Doc title="Cancellation &amp; refund policy" updated={B.updated}>
       <h2>Cancellation</h2>
-      <p>You can cancel an order any time before it is shipped. Contact us on WhatsApp or email with your order number. Orders that have been shipped cannot be cancelled, but you may use the return process below.</p>
+      <p>You can cancel an order any time before it is shipped. Contact us on WhatsApp or email with your order number. Orders that have been shipped cannot be cancelled, but you may use the return process below. Cancellation is instant. If you paid online, we approve the refund and send the full amount back to your original payment method; you will get an email when it is sent.</p>
       <h2>Returns and replacement</h2>
       <p>If the laptop arrives damaged, does not match the listed specification, or has a fault, tell us within 3 days of delivery with photos or a short video. After checking, we will offer a replacement, a repair or a refund.</p>
       <p>Please keep the original packaging and do not use up the item before reporting a problem. Laptops with physical or liquid damage caused after delivery are not eligible.</p>

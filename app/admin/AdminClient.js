@@ -5,7 +5,7 @@ import { upload as blobUpload } from '@vercel/blob/client';
 import { inr } from '@/lib/format';
 
 const ORDER_ST = ['new', 'confirmed', 'shipped', 'delivered', 'cancelled'];
-const PAY_ST = ['pending', 'paid', 'failed', 'refunded', 'refund_pending'];
+const PAY_ST = ['pending', 'paid', 'failed', 'refunded', 'refund_pending', 'refunding'];
 const SELL_ST = ['new', 'contacted', 'purchased', 'rejected'];
 const blank = { name: '', cpu: '', ram: '', storage: '', display: '', price: '', stock: 1, image: '', note: '', warranty: false, active: true };
 const post = (url, method, body) => fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
@@ -43,6 +43,11 @@ export default function AdminClient({ products, orders, sells, stats }) {
 
   async function logout() { await post('/api/admin/logout', 'POST'); router.push('/admin/login'); router.refresh(); }
   async function patchOrder(id, body) { await post('/api/admin/orders/' + id, 'PATCH', body); refresh(); }
+  async function approveRefund(o) {
+    if (!confirm(`Approve the refund of ${inr(o.total)} for order ${o.code}? The money goes back to the customer through Razorpay and cannot be undone.`)) return;
+    try { await post('/api/admin/orders/' + o.id + '/refund', 'POST'); } catch (e) { alert(e.message); }
+    refresh();
+  }
   async function patchSell(id, status) { await post('/api/admin/sell/' + id, 'PATCH', { status }); refresh(); }
   async function save() {
     setErr('');
@@ -159,6 +164,7 @@ export default function AdminClient({ products, orders, sells, stats }) {
               <Kpi label="Pending" value={inr(k.pendingPay)} />
               <Kpi label="Refunded" value={inr(k.refunded)} />
             </div>
+            {orders.some((o) => o.payment_status === 'refund_pending') ? <div className="err" style={{ marginBottom: 14 }}><b>{orders.filter((o) => o.payment_status === 'refund_pending').length} refund(s) waiting for your approval.</b> Click "Approve refund" on the order below. The customer already cancelled it and the laptop is back in stock.</div> : null}
             <div className="filters">{['all', ...PAY_ST].map((x) => <button key={x} className={'chip' + (payFilter === x ? ' on' : '')} onClick={() => setPayFilter(x)}>{x}</button>)}</div>
             <div className="scroll"><table className="tbl">
               <thead><tr><th>Date</th><th>Order</th><th>Customer</th><th>Method</th><th>Amount</th><th>Razorpay IDs</th><th>Status</th></tr></thead>
@@ -171,13 +177,14 @@ export default function AdminClient({ products, orders, sells, stats }) {
                     <td>{o.method === 'cod' ? 'Cash on delivery' : 'Razorpay'}</td>
                     <td><b>{inr(o.total)}</b></td>
                     <td><small>{o.razorpay_order_id || '—'}<br />{o.razorpay_payment_id || ''}</small></td>
-                    <td><select className="inp" value={o.payment_status} onChange={(e) => patchOrder(o.id, { payment_status: e.target.value })}>{PAY_ST.map((x) => <option key={x}>{x}</option>)}</select></td>
+                    <td><select className="inp" value={o.payment_status} onChange={(e) => patchOrder(o.id, { payment_status: e.target.value })}>{PAY_ST.map((x) => <option key={x}>{x}</option>)}</select>
+                      {o.payment_status === 'refund_pending' ? <><br /><button className="btn sm" style={{ marginTop: 8 }} onClick={() => approveRefund(o)}>Approve refund {inr(o.total)}</button></> : null}</td>
                   </tr>
                 ))}
                 {!shownPay.length && <tr><td colSpan={7} className="empty">No payments.</td></tr>}
               </tbody>
             </table></div>
-            <p className="muted" style={{ fontSize: 13, marginTop: 12 }}>Online payments are marked paid automatically once Razorpay confirms them. To refund an online payment, refund it in the Razorpay dashboard, then set the status to refunded here.</p>
+            <p className="muted" style={{ fontSize: 13, marginTop: 12 }}>Online payments are marked paid automatically once Razorpay confirms them. When a customer cancels a paid order, the refund shows here as refund_pending. Click Approve refund to send the money back through Razorpay.</p>
           </>
         )}
 

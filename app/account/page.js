@@ -45,11 +45,11 @@ function Orders() {
   const load = useCallback(() => api('/api/me/orders', 'GET').then((d) => setOrders(d.orders)).catch((e) => setMsg(e.message)), []);
   useEffect(() => { load(); }, [load]);
   async function cancel(o) {
-    if (!confirm(`Cancel order ${o.code}?` + (o.payment_status === 'paid' ? ` Your ${inr(o.total)} will be refunded to your original payment method.` : ''))) return;
+    if (!confirm(`Cancel order ${o.code}?` + (o.payment_status === 'paid' ? ` Your ${inr(o.total)} will be refunded to your original payment method once we approve it.` : ''))) return;
     setMsg('');
     try {
       const r = await api(`/api/me/orders/${o.code}/cancel`, 'POST');
-      setMsg(r.refunded ? `Order ${o.code} cancelled. Your refund is on its way (5 to 7 working days).` : `Order ${o.code} cancelled. We will refund any payment and email you.`);
+      setMsg(r.refundPending ? `Order ${o.code} cancelled. We will approve your refund shortly and email you when it is sent.` : `Order ${o.code} cancelled.`);
       load();
     } catch (e) { setMsg(e.message); }
   }
@@ -68,7 +68,8 @@ function Orders() {
           <div className="sum t"><span>Total</span><span>{inr(o.total)}</span></div>
           <p className="muted small">Deliver to {o.name}, {o.address}, {o.city} {o.pincode}</p>
           {o.payment_status === 'refunded' ? <p className="small" style={{ color: '#1a7f37' }}>Refunded: {inr(o.total)} sent back to your payment method.</p> : null}
-          {o.payment_status === 'refund_pending' ? <p className="small" style={{ color: '#b45309' }}>Refund in progress. We will email you when it is sent.</p> : null}
+          {o.payment_status === 'refunding' ? <p className="small" style={{ color: '#b45309' }}>Refund is being sent.</p> : null}
+          {o.payment_status === 'refund_pending' ? <p className="small" style={{ color: '#b45309' }}>Refund waiting for our approval. We will email you when it is sent.</p> : null}
           <div className="oacts">
             <Link className="btn ghost sm" href={'/order/' + o.code}>View</Link>
             {o.cancellable ? <button className="btn ghost sm danger" onClick={() => cancel(o)}>Cancel order</button> : o.order_status === 'shipped' ? <span className="muted small">Shipped orders cannot be cancelled. WhatsApp us for help.</span> : null}
