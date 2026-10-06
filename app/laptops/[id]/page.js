@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getProduct } from '@/lib/db';
-import { inr } from '@/lib/format';
+import { inr, productImages } from '@/lib/format';
+import Gallery from '@/components/Gallery';
 import AddToCart from '@/components/AddToCart';
 export const dynamic = 'force-dynamic';
 
@@ -14,7 +15,7 @@ export async function generateMetadata({ params }) {
   return {
     title: `${title} | Lapstack`,
     description,
-    openGraph: { title, description, url: `/laptops/${p.id}`, ...(p.image ? { images: [{ url: p.image, alt: p.name }] } : {}) },
+    openGraph: { title, description, url: `/laptops/${p.id}`, ...(productImages(p).length ? { images: productImages(p).map((url) => ({ url, alt: p.name })) } : {}) },
   };
 }
 
@@ -27,7 +28,7 @@ export default async function Detail({ params }) {
   return (
     <div className="wrap">
       <div className="detail">
-        <div className="ph">{p.image ? <img src={p.image} alt={p.name} /> : null}</div>
+        <Gallery images={productImages(p)} alt={p.name} />
         <div>
           <div className="eyebrow">Refurbished</div>
           <h1 style={{ fontSize: 44 }}>{p.name}</h1>

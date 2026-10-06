@@ -2,12 +2,13 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { upload as blobUpload } from '@vercel/blob/client';
-import { inr } from '@/lib/format';
+import { inr, productImages } from '@/lib/format';
+import ImageManager from './ImageManager';
 
 const ORDER_ST = ['new', 'confirmed', 'shipped', 'delivered', 'cancelled'];
 const PAY_ST = ['pending', 'paid', 'failed', 'refunded', 'refund_pending', 'refunding'];
 const SELL_ST = ['new', 'contacted', 'purchased', 'rejected'];
-const blank = { name: '', cpu: '', ram: '', storage: '', display: '', price: '', stock: 1, image: '', note: '', warranty: false, active: true };
+const blank = { name: '', cpu: '', ram: '', storage: '', display: '', price: '', stock: 1, image: '', images: [], note: '', warranty: false, active: true };
 const post = (url, method, body) => fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
 const fmt = (d) => new Date(d.replace(' ', 'T') + 'Z').toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
 
@@ -33,6 +34,7 @@ export default function AdminClient({ products, orders, sells, stats }) {
   const router = useRouter();
   const [tab, setTab] = useState('dashboard');
   const [edit, setEdit] = useState(null);
+  const [imgBusy, setImgBusy] = useState(false);
   const [err, setErr] = useState('');
   const [q, setQ] = useState('');
   const [confirmDel, setConfirmDel] = useState(null);
@@ -58,13 +60,6 @@ export default function AdminClient({ products, orders, sells, stats }) {
   }
   async function quick(p, patch) { await post('/api/admin/products/' + p.id, 'PUT', { ...p, warranty: !!p.warranty, active: !!p.active, ...patch }); refresh(); }
   async function remove(p) { await fetch('/api/admin/products/' + p.id + '?hard=1', { method: 'DELETE' }); setConfirmDel(null); refresh(); }
-  async function upload(file) {
-    if (!file) return;
-    try {
-      const r = await blobUpload('products/' + file.name.replace(/[^\w.-]+/g, '_'), file, { access: 'public', handleUploadUrl: '/api/blob/upload' });
-      setEdit((e) => ({ ...e, image: r.url }));
-    } catch (x) { setErr(x.message || 'Upload failed'); }
-  }
   const s = (key) => (e) => setEdit({ ...edit, [key]: e.target.value });
 
   const shownProducts = useMemo(() => products.filter((p) => !q || (p.name + p.cpu).toLowerCase().includes(q.toLowerCase())), [products, q]);
@@ -197,7 +192,7 @@ export default function AdminClient({ products, orders, sells, stats }) {
               <tbody>
                 {shownProducts.map((p) => (
                   <tr key={p.id} style={{ opacity: p.active ? 1 : .55 }}>
-                    <td>{p.image ? <img src={p.image} alt="" style={{ width: 60, height: 45, objectFit: 'cover', borderRadius: 8 }} /> : null}</td>
+                    <td>{p.image ? <img src={p.image} alt="" style={{ width: 60, height: 45, objectFit: 'cover', borderRadius: 8, cursor: 'pointer' }} onClick={() => { setErr(''); setEdit({ ...p, images: productImages(p), warranty: !!p.warranty, active: !!p.active }); }} title="Click to edit photos" /> : null}{productImages(p).length > 1 ? <small style={{ display: 'block' }}>{productImages(p).length} photos</small> : null}</td>
                     <td><b>{p.name}</b><br /><small>{[p.cpu, p.ram, p.storage].filter(Boolean).join(' · ')}</small></td>
                     <td>{inr(p.price)}</td>
                     <td><div className="qty"><button onClick={() => quick(p, { stock: Math.max(0, p.stock - 1) })}>−</button><span>{p.stock}</span><button onClick={() => quick(p, { stock: p.stock + 1 })}>+</button></div></td>
@@ -207,7 +202,7 @@ export default function AdminClient({ products, orders, sells, stats }) {
                         <><button className="btn sm danger" onClick={() => remove(p)}>Yes, delete</button>{' '}<button className="btn sm ghost" onClick={() => setConfirmDel(null)}>No</button></>
                       ) : (
                         <>
-                          <button className="btn sm ghost" onClick={() => { setErr(''); setEdit({ ...p, warranty: !!p.warranty, active: !!p.active }); }}>Edit</button>{' '}
+                          <button className="btn sm ghost" onClick={() => { setErr(''); setEdit({ ...p, images: productImages(p), warranty: !!p.warranty, active: !!p.active }); }}>Edit</button>{' '}
                           <button className="btn sm ghost" onClick={() => quick(p, { active: !p.active })}>{p.active ? 'Hide' : 'Show'}</button>{' '}
                           <button className="btn sm danger" onClick={() => setConfirmDel(p.id)}>Delete</button>
                         </>
@@ -261,11 +256,10 @@ export default function AdminClient({ products, orders, sells, stats }) {
               <label className="f">Stock<input type="number" min="0" value={edit.stock} onChange={s('stock')} /></label>
             </div>
             <label className="f">Note<input value={edit.note} onChange={s('note')} /></label>
-            <label className="f">Image<input type="file" accept="image/*" onChange={(e) => upload(e.target.files[0])} /></label>
-            {edit.image ? <img src={edit.image} alt="" style={{ width: 120, borderRadius: 8, marginBottom: 12 }} /> : null}
+            <ImageManager images={edit.images || []} onBusy={setImgBusy} onChange={(imgs) => setEdit((e) => ({ ...e, images: imgs, image: imgs[0] || '' }))} />
             <label style={{ display: 'flex', gap: 8, marginBottom: 6 }}><input type="checkbox" checked={edit.warranty} onChange={(e) => setEdit({ ...edit, warranty: e.target.checked })} /> Warranty included</label>
             <label style={{ display: 'flex', gap: 8, marginBottom: 16 }}><input type="checkbox" checked={edit.active} onChange={(e) => setEdit({ ...edit, active: e.target.checked })} /> Visible in store</label>
-            <div style={{ display: 'flex', gap: 10 }}><button className="btn" onClick={save}>Save</button><button className="btn ghost" onClick={() => setEdit(null)}>Cancel</button></div>
+            <div style={{ display: 'flex', gap: 10 }}><button className="btn" onClick={save} disabled={imgBusy}>{imgBusy ? 'Uploading photos…' : 'Save'}</button><button className="btn ghost" onClick={() => setEdit(null)}>Cancel</button></div>
           </div>
         </div>
       )}
