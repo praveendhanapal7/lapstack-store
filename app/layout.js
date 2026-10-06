@@ -4,7 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://lapstack-store.vercel.app'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://lapstack.in'),
   title: 'Lapstack — Premium refurbished laptops',
   description: 'Tested, ready-to-use refurbished laptops from ₹21,000. Buy online, delivered to your door.',
   openGraph: { siteName: 'Lapstack', type: 'website', locale: 'en_IN' },
