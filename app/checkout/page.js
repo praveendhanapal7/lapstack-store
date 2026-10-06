@@ -2,10 +2,11 @@
 import Link from 'next/link';
 import Script from 'next/script';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCart } from '@/components/CartProvider';
 import { useAuth, SignIn } from '@/components/Auth';
 import { inr } from '@/lib/format';
+import { track } from '@/lib/pixel';
 
 export default function Checkout() {
   const { items, clear, ready } = useCart();
@@ -44,6 +45,14 @@ export default function Checkout() {
   const lines = items.map((i) => ({ ...i, p: info[i.id] })).filter((l) => l.p);
   const total = lines.reduce((s, l) => s + l.p.price * l.qty, 0);
 
+  // Meta Pixel: the shopper reached checkout (once per visit, when the cart is loaded).
+  const fired = useRef(false);
+  useEffect(() => {
+    if (fired.current || !lines.length) return;
+    fired.current = true;
+    track('InitiateCheckout', { content_ids: lines.map((l) => String(l.id)), content_type: 'product', num_items: lines.reduce((n, l) => n + l.qty, 0), value: total, currency: 'INR' });
+  }, [lines.length]); // eslint-disable-line
+
   async function submit(e) {
     e.preventDefault(); setErr(''); setBusy(true);
     try {
@@ -58,7 +67,11 @@ export default function Checkout() {
         prefill: { name: z.name, contact: z.phone, email: user.email }, theme: { color: '#FDC500' },
         handler: async (r) => {
           const v = await fetch('/api/payments/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: d.code, razorpay_order_id: r.razorpay_order_id, razorpay_payment_id: r.razorpay_payment_id, razorpay_signature: r.razorpay_signature }) });
-          if (v.ok) { clear(); refresh(); router.push('/order/' + d.code); }
+          if (v.ok) {
+            // Meta Pixel: a real, verified payment. eventID = order code so Meta never counts it twice.
+            track('Purchase', { content_ids: lines.map((l) => String(l.id)), content_type: 'product', num_items: lines.reduce((n, l) => n + l.qty, 0), value: total, currency: 'INR' }, { eventID: d.code });
+            clear(); refresh(); router.push('/order/' + d.code);
+          }
           else { setErr('Payment could not be verified. If money was deducted, WhatsApp us with order ' + d.code); setBusy(false); }
         },
         modal: { ondismiss: () => setBusy(false) },
