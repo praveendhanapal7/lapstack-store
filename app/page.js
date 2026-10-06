@@ -15,9 +15,9 @@ export default async function Home() {
       <section className="hero">
         <div className="wrap">
           <div>
-            <div className="eyebrow">Lapstack</div>
-            <h1><span className="l1">Premium laptops.</span><span className="l2"><mark>Honest prices.</mark></span></h1>
-            <p>Tested business-class laptops from Dell, Lenovo, HP and Apple. From ₹21,000.</p>
+            <div className="eyebrow">Lapstack Certified Refurbished</div>
+            <h1><span className="l1">Premium laptops.</span><span className="l2">Made for everyone.</span></h1>
+            <p>Business-class power from Dell, Lenovo, HP and Apple. Tested, trusted, from ₹21,000.</p>
             <div className="cta">
               <Link className="btn" href="/laptops">Shop laptops</Link>
               <a className="btn ghost" href={`https://wa.me/${WA}`}>Chat on WhatsApp</a>

@@ -287,3 +287,13 @@ h2.title,.contact h2,.sellcta h2{font-weight:600;letter-spacing:-.045em}
  input,select,textarea{font-size:16px!important}
 }
 @media(max-width:340px){.grid{grid-template-columns:1fr}}
+
+/* hero v5 */
+.hero{padding-top:112px;background:radial-gradient(ellipse 60% 45% at 50% 0%,#fff3c2,#fff 72%)}
+.hero .eyebrow{font-size:17px;font-weight:600;letter-spacing:-.01em;color:#6e6e73;margin-bottom:14px}
+.hero h1{background:none;color:#1d1d1f;-webkit-text-fill-color:initial;font-weight:700;letter-spacing:-.06em;line-height:1.02}
+.hero h1 .l1{font-size:clamp(46px,9vw,104px)}
+.hero h1 .l2{font-family:inherit;font-style:normal;font-weight:700;font-size:clamp(46px,9vw,104px);letter-spacing:-.06em;line-height:1.02;margin-top:0;background:linear-gradient(90deg,#B88A00,#FDC500 55%,#ffb800);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;padding-bottom:.08em}
+.hero p{font-size:clamp(19px,2.2vw,26px);font-weight:500;color:#1d1d1f;max-width:640px;letter-spacing:-.02em;margin:24px auto 34px}
+.hero .cta .btn{padding:14px 32px;font-size:17px}
+@media(max-width:860px){.hero{padding-top:56px}.hero h1 .l1,.hero h1 .l2{font-size:clamp(40px,12.5vw,60px)}}
