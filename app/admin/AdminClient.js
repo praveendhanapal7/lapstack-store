@@ -8,6 +8,7 @@ import ImageManager from './ImageManager';
 const ORDER_ST = ['new', 'confirmed', 'shipped', 'delivered', 'cancelled'];
 const PAY_ST = ['pending', 'paid', 'failed', 'refunded', 'refund_pending', 'refunding'];
 const SELL_ST = ['new', 'contacted', 'purchased', 'rejected'];
+const CLAIM_ST = ['new', 'contacted', 'in_repair', 'resolved', 'rejected'];
 const blank = { name: '', cpu: '', ram: '', storage: '', display: '', price: '', stock: 1, image: '', images: [], note: '', warranty: false, active: true };
 const post = (url, method, body) => fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
 const fmt = (d) => new Date(d.replace(' ', 'T') + 'Z').toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
@@ -30,7 +31,7 @@ function Bars({ days, field, money }) {
   );
 }
 
-export default function AdminClient({ products, orders, sells, stats }) {
+export default function AdminClient({ products, orders, sells, claims = [], stats }) {
   const router = useRouter();
   const [tab, setTab] = useState('dashboard');
   const [edit, setEdit] = useState(null);
@@ -50,6 +51,7 @@ export default function AdminClient({ products, orders, sells, stats }) {
     try { await post('/api/admin/orders/' + o.id + '/refund', 'POST'); } catch (e) { alert(e.message); }
     refresh();
   }
+  async function patchClaim(id, status) { await post('/api/admin/warranty/' + id, 'PATCH', { status }); refresh(); }
   async function patchSell(id, status) { await post('/api/admin/sell/' + id, 'PATCH', { status }); refresh(); }
   async function save() {
     setErr('');
@@ -74,8 +76,8 @@ export default function AdminClient({ products, orders, sells, stats }) {
     a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = 'lapstack-payments.csv'; a.click();
   }
 
-  const NAV = [['dashboard', 'Dashboard'], ['orders', 'Orders'], ['products', 'Products'], ['payments', 'Payments'], ['sell', 'Sell requests']];
-  const badge = { orders: k.newOrders, sell: k.newSell };
+  const NAV = [['dashboard', 'Dashboard'], ['orders', 'Orders'], ['products', 'Products'], ['payments', 'Payments'], ['warranty', 'Warranty'], ['sell', 'Sell requests']];
+  const badge = { orders: k.newOrders, sell: k.newSell, warranty: k.newClaims };
 
   return (
     <div className="adm">
@@ -217,6 +219,28 @@ export default function AdminClient({ products, orders, sells, stats }) {
           </>
         )}
 
+        {tab === 'warranty' && (
+          <>
+            <h1>Warranty claims</h1>
+            <p className="muted" style={{ marginBottom: 14 }}>Every laptop has 6 months: <b>full warranty</b> for the first 3 months (repair or replacement is free) and <b>service support</b> for the next 3 (no service charge, customer pays only for spare parts).</p>
+            <div style={{ display: 'grid', gap: 16 }}>
+              {claims.map((c) => (
+                <div className="box" key={c.id}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                    <div>
+                      <b style={{ fontSize: 18 }}>{c.item_name}</b> <span className={'tag ' + (c.claim_type === 'full' ? 'paid' : '')}>{c.claim_type === 'full' ? 'Full warranty (free)' : 'Service support (spares only)'}</span><br />
+                      <small>{fmt(c.created_at)} · order {c.code} (bought {fmt(c.purchased_at)}) · {c.name} · <a href={'tel:' + c.phone}>{c.phone}</a> · {c.email}</small>
+                    </div>
+                    <select className="inp" style={{ width: 160 }} value={c.status} onChange={(e) => patchClaim(c.id, e.target.value)}>{CLAIM_ST.map((x) => <option key={x}>{x}</option>)}</select>
+                  </div>
+                  <p style={{ margin: '10px 0 0' }}>{c.issue}</p>
+                </div>
+              ))}
+              {!claims.length && <p className="empty">No warranty claims yet.</p>}
+            </div>
+          </>
+        )}
+
         {tab === 'sell' && (
           <>
             <h1>Sell requests</h1>
@@ -257,7 +281,6 @@ export default function AdminClient({ products, orders, sells, stats }) {
             </div>
             <label className="f">Note<input value={edit.note} onChange={s('note')} /></label>
             <ImageManager images={edit.images || []} onBusy={setImgBusy} onChange={(imgs) => setEdit((e) => ({ ...e, images: imgs, image: imgs[0] || '' }))} />
-            <label style={{ display: 'flex', gap: 8, marginBottom: 6 }}><input type="checkbox" checked={edit.warranty} onChange={(e) => setEdit({ ...edit, warranty: e.target.checked })} /> Warranty included</label>
             <label style={{ display: 'flex', gap: 8, marginBottom: 16 }}><input type="checkbox" checked={edit.active} onChange={(e) => setEdit({ ...edit, active: e.target.checked })} /> Visible in store</label>
             <div style={{ display: 'flex', gap: 10 }}><button className="btn" onClick={save} disabled={imgBusy}>{imgBusy ? 'Uploading photos…' : 'Save'}</button><button className="btn ghost" onClick={() => setEdit(null)}>Cancel</button></div>
           </div>

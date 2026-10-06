@@ -26,6 +26,64 @@ function Help({ code, label = 'Need help?' }) {
     </div>
   );
 }
+const CLAIM_LABEL = { full: 'Full warranty', service: 'Service support' };
+const CLAIM_STATE = { new: 'Submitted. Our team will contact you soon.', contacted: 'Our team has contacted you.', in_repair: 'Being repaired.', resolved: 'Resolved.', rejected: 'Closed. Please contact us if you have questions.' };
+const day = (iso) => new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+// Warranty for one order: 6 months from purchase. First 3 months = full warranty, next 3 months = service support.
+function WarrantyBox({ o, onDone }) {
+  const w = o.warranty;
+  const [open, setOpen] = useState(false);
+  const [f, setF] = useState({ item: o.items.length === 1 ? String(o.items[0].id) : '', issue: '', phone: o.phone || '' });
+  const [err, setErr] = useState(''); const [busy, setBusy] = useState(false); const [sent, setSent] = useState(false);
+  if (!w) return null;
+  const full = w.phase === 'full';
+  async function submit(e) {
+    e.preventDefault(); setErr(''); setBusy(true);
+    try { await api(`/api/me/orders/${o.code}/warranty`, 'POST', f); setSent(true); setOpen(false); onDone?.(); }
+    catch (x) { setErr(x.message); }
+    setBusy(false);
+  }
+  return (
+    <div className="warrantybox">
+      <div className="whead">
+        <b>{w.phase === 'expired' ? 'Warranty ended' : full ? 'Full warranty' : 'Service support'}</b>
+        {w.phase === 'expired'
+          ? <span>The 6 month warranty ended on {day(w.serviceUntil)}.</span>
+          : <span>{w.daysLeft} day{w.daysLeft === 1 ? '' : 's'} left (until {day(full ? w.fullUntil : w.serviceUntil)})</span>}
+      </div>
+      {w.phase !== 'expired' ? (
+        <p className="muted small">{full ? 'Repair or replacement is completely free.' : 'There is no service charge. You pay only for any spare part that has to be replaced.'}</p>
+      ) : null}
+      {o.claims.map((c) => (
+        <p className="claimline" key={c.id}><b>{CLAIM_LABEL[c.claim_type] || 'Warranty'} claim</b> for {c.item_name} · {when(c.created_at)}<br /><span>{CLAIM_STATE[c.status] || c.status}</span></p>
+      ))}
+      {sent ? (
+        <div className="ok"><b>Your information was submitted. Our team will contact you soon.</b><Help code={o.code} label="Want it faster? Call customer care to speed up the process." /></div>
+      ) : null}
+      {w.phase !== 'expired' && !sent && !open && !(o.items.length === 1 && o.claims.some((c) => ['new', 'contacted', 'in_repair'].includes(c.status))) ? (
+        <button className="btn sm" onClick={() => setOpen(true)}>{full ? 'Claim full warranty' : 'Claim service support'}</button>
+      ) : null}
+      {open ? (
+        <form onSubmit={submit} className="claimform">
+          {err ? <div className="err">{err}</div> : null}
+          {o.items.length > 1 ? (
+            <label className="f">Which laptop?
+              <select required value={f.item} onChange={(e) => setF({ ...f, item: e.target.value })}>
+                <option value="">Choose…</option>
+                {o.items.map((i) => <option key={i.id} value={i.id}>{i.name}</option>)}
+              </select>
+            </label>
+          ) : null}
+          <label className="f">What is the problem?<textarea required rows={3} minLength={10} maxLength={1000} placeholder="For example: the laptop does not switch on, or the screen flickers." value={f.issue} onChange={(e) => setF({ ...f, issue: e.target.value })} /></label>
+          <label className="f">Phone number (10 digits)<input required inputMode="numeric" value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} /></label>
+          <div className="oacts"><button className="btn sm" disabled={busy}>{busy ? 'Submitting…' : full ? 'Submit full warranty claim' : 'Submit service support claim'}</button><button type="button" className="btn ghost sm" onClick={() => setOpen(false)}>Cancel</button></div>
+        </form>
+      ) : null}
+    </div>
+  );
+}
+
 const blank = { name: '', phone: '', address: '', city: '', pincode: '' };
 
 export default function Account() {
@@ -87,6 +145,7 @@ function Orders() {
             <Link className="btn ghost sm" href={'/order/' + o.code}>View</Link>
             {o.cancellable ? <button className="btn ghost sm danger" onClick={() => cancel(o)}>Cancel order</button> : o.order_status === 'shipped' ? <span className="muted small">Shipped orders cannot be cancelled. Please contact us.</span> : null}
           </div>
+          <WarrantyBox o={o} onDone={load} />
           <Help code={o.code} />
         </div>
       ))}

@@ -39,7 +39,7 @@ export default async function Home() {
       <section className="trust">
         <div className="wrap">
           <div><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></i><b>Tested</b><span>Checked before listing</span></div>
-          <div><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z" /></svg></i><b>Warranty</b><span>On selected models</span></div>
+          <div><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z" /></svg></i><b>6 month warranty</b><span>On every laptop</span></div>
           <div><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 018 0v3" /></svg></i><b>Secure payment</b><span>UPI, cards, netbanking</span></div>
           <div><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7" /><circle cx="7" cy="18" r="1.8" /><circle cx="17" cy="18" r="1.8" /></svg></i><b>Delivered</b><span>Across India</span></div>
         </div>
@@ -82,7 +82,7 @@ export default async function Home() {
         <div className="wrap" style={{ maxWidth: 780 }}>
           <div className="eyebrow">FAQ</div>
           <h2 className="title">Common questions</h2>
-          <details><summary>Are the laptops tested?</summary><p>Yes. Every laptop is checked before listing. Models marked "Warranty" carry a warranty.</p></details>
+          <details><summary>Are the laptops tested?</summary><p>Yes. Every laptop is checked before listing. Every laptop also comes with a 6 month warranty: 3 months full warranty, then 3 months service support.</p></details>
           <details><summary>Are the photos exact?</summary><p>Photos are representative of the model. Ask us on WhatsApp for photos of the exact unit.</p></details>
           <details><summary>How is payment done?</summary><p>Pay online by UPI, card or netbanking. Payments are processed securely by Razorpay.</p></details>
           <details><summary>Can I sell you my laptop?</summary><p>Yes. Use the Sell page to add photos, specs, purchase date and an optional bill. We will contact you with an offer.</p></details>

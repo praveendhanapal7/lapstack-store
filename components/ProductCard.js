@@ -5,7 +5,6 @@ export default function ProductCard({ p }) {
     <Link href={`/laptops/${p.id}`} className="card">
       <div className="ph">
         {p.image ? <img src={p.image} alt={p.name} loading="lazy" /> : null}
-        {p.warranty ? <span className="badge">Warranty</span> : null}
         {p.stock < 1 ? <span className="badge out">Sold out</span> : null}
       </div>
       <div className="body">
