@@ -4,6 +4,7 @@ import { AuthProvider } from '@/components/Auth';
 import CartProvider from '@/components/CartProvider';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import SiteStats from '@/components/SiteStats';
 
 // Lapstack's own Meta Pixel ("Lapstack Pixel" in the Lapstack Meta business portfolio). NEXT_PUBLIC_META_PIXEL_ID can override it.
 const PIXEL = (process.env.NEXT_PUBLIC_META_PIXEL_ID || '3214943238710618').replace(/\D/g, '');
@@ -42,6 +43,7 @@ export default function RootLayout({ children }) {
             <noscript><img height="1" width="1" style={{ display: 'none' }} alt="" src={`https://www.facebook.com/tr?id=${PIXEL}&ev=PageView&noscript=1`} /></noscript>
           </>
         ) : null}
+        <SiteStats />
         <AuthProvider>
           <CartProvider>
             <Header />

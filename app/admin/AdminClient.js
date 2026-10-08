@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { upload as blobUpload } from '@vercel/blob/client';
 import { inr, productImages } from '@/lib/format';
 import ImageManager from './ImageManager';
+import Traffic from './Traffic';
 
 const ORDER_ST = ['new', 'confirmed', 'shipped', 'delivered', 'cancelled'];
 const PAY_ST = ['pending', 'paid', 'failed', 'refunded', 'refund_pending', 'refunding'];
@@ -76,7 +77,7 @@ export default function AdminClient({ products, orders, sells, claims = [], stat
     a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = 'lapstack-payments.csv'; a.click();
   }
 
-  const NAV = [['dashboard', 'Dashboard'], ['orders', 'Orders'], ['products', 'Products'], ['payments', 'Payments'], ['warranty', 'Warranty'], ['sell', 'Sell requests']];
+  const NAV = [['dashboard', 'Dashboard'], ['analytics', 'Analytics'], ['orders', 'Orders'], ['products', 'Products'], ['payments', 'Payments'], ['warranty', 'Warranty'], ['sell', 'Sell requests']];
   const badge = { orders: k.newOrders, sell: k.newSell, warranty: k.newClaims };
 
   return (
@@ -128,6 +129,8 @@ export default function AdminClient({ products, orders, sells, claims = [], stat
             </div>
           </>
         )}
+
+        {tab === 'analytics' && <Traffic />}
 
         {tab === 'orders' && (
           <>
