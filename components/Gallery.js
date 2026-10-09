@@ -12,8 +12,7 @@ export default function Gallery({ images, alt }) {
     <div className="gal">
       <div className="ph" onTouchStart={(e) => { x0.current = e.touches[0].clientX; }}
         onTouchEnd={(e) => { const d = e.changedTouches[0].clientX - x0.current; if (Math.abs(d) > 40) go(d < 0 ? 1 : -1); }}>
-        {/* Built-in stock photos are small, so show them at their own size instead of blowing them up blurry. */}
-        <img src={images[i]} alt={alt} className={images[i].startsWith('/laptops/') ? 'lowres' : ''} />
+        <img src={images[i]} alt={alt} />
         {n > 1 ? (
           <>
             <button type="button" className="gnav prev" onClick={() => go(-1)} aria-label="Previous photo">‹</button>
