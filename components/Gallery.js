@@ -23,7 +23,7 @@ export default function Gallery({ images, alt }) {
       </div>
       {n > 1 ? (
         <div className="gthumbs">
-          {images.map((u, k) => <button type="button" key={u} className={k === i ? 'on' : ''} onClick={() => setI(k)} aria-label={`Photo ${k + 1}`}><img src={u} alt="" /></button>)}
+          {images.map((u, k) => <button type="button" key={u} className={k === i ? 'on' : ''} onClick={() => setI(k)} aria-label={`Photo ${k + 1}`}><img src={u.startsWith('/laptops/real/') ? u.replace('/laptops/real/', '/laptops/real/thumb/') : u} alt="" loading="lazy" /></button>)}
         </div>
       ) : null}
     </div>

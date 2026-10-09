@@ -436,6 +436,8 @@ h2.title,.contact h2,.sellcta h2{font-weight:600;letter-spacing:-.045em}
 @media(max-width:600px){.herobadge{font-size:14px;padding:7px 14px 7px 8px}.herobadge em{display:none}}
 /* HD studio photos: show the whole laptop on white, never cropped */
 .card .ph:has(img[src*="/laptops/hd"]),.gal .ph:has(img[src*="/laptops/hd"]){background:#fff}
+.gal .ph:has(img[src*="/laptops/real/"]){background:#f5f5f7}
+.gal .ph img[src*="/laptops/real/"]{object-fit:contain}
 .card .ph img[src*="/laptops/hd"],.gal .ph img[src*="/laptops/hd"]{object-fit:contain}
 .suggest{padding:8px 0 80px;border-top:1px solid #ececf0;padding-top:48px}
 /* order tracking steps */
