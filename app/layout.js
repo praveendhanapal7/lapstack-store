@@ -7,7 +7,8 @@ import Footer from '@/components/Footer';
 import SiteStats from '@/components/SiteStats';
 
 // Lapstack's own Meta Pixel ("Lapstack Pixel" in the Lapstack Meta business portfolio). NEXT_PUBLIC_META_PIXEL_ID can override it.
-const PIXEL = (process.env.NEXT_PUBLIC_META_PIXEL_ID || '3214943238710618').replace(/\D/g, '');
+// Only the live site sends to Meta, so local testing never adds fake events.
+const PIXEL = process.env.NODE_ENV === 'production' ? (process.env.NEXT_PUBLIC_META_PIXEL_ID || '3214943238710618').replace(/\D/g, '') : '';
 
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://lapstack.in'),
