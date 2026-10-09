@@ -15,6 +15,7 @@ export default function Header() {
       <div className="wrap">
         <Link href="/" className="brand" onClick={close}><img src="/logo.png" alt="" /><span>Lapstack</span></Link>
         <nav className="links">
+          <Link href="/">Home</Link>
           <Link href="/laptops">Laptops</Link>
           <Link href="/sell">Sell</Link>
           <Link href="/about">About</Link>
@@ -26,6 +27,7 @@ export default function Header() {
       </div>
       {open ? (
         <nav className="mobnav" onClick={close}>
+          <Link href="/">Home</Link>
           <Link href="/laptops">Laptops</Link>
           <Link href="/sell">Sell your laptop</Link>
           <Link href="/about">About us</Link>
