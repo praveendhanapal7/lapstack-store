@@ -15,7 +15,6 @@ export default function OrderAccount({ email }) {
       <h3>Create your free account</h3>
       <ul>
         <li>📦 Track this order</li>
-        <li>✖️ Cancel before it ships</li>
         <li>🛡️ Claim your 6-month warranty</li>
       </ul>
       {open

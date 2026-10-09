@@ -5,7 +5,8 @@ import OrderAccount from '@/components/OrderAccount';
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Your order — Lapstack' };
 
-const STEPS = [['paid', 'Payment received'], ['confirmed', 'Confirmed'], ['shipped', 'Shipped'], ['delivered', 'Delivered']];
+// Paying confirms the order automatically; the shop then marks it Shipped and Delivered in Admin.
+const STEPS = [['confirmed', 'Paid & confirmed'], ['shipped', 'Shipped'], ['delivered', 'Delivered']];
 
 // Hide most of the email: this page is opened by order number only.
 const mask = (e) => e.replace(/^(.{2})[^@]*(@.*)$/, (m, a, b) => a + '****' + b);
@@ -17,12 +18,12 @@ export default async function OrderPage({ params }) {
   const WA = process.env.NEXT_PUBLIC_WHATSAPP || '919345145774';
   const paid = ['paid', 'refund_pending', 'refunding', 'refunded'].includes(o.payment_status);
   const cancelled = o.order_status === 'cancelled';
-  // How far along the order is: 1 = paid, 2 = confirmed, 3 = shipped, 4 = delivered.
-  const at = !paid ? 0 : { new: 1, confirmed: 2, shipped: 3, delivered: 4 }[o.order_status] || 1;
+  // How far along the order is: 1 = paid & confirmed, 2 = shipped, 3 = delivered.
+  const at = !paid ? 0 : { shipped: 2, delivered: 3 }[o.order_status] || 1;
   const note = cancelled
     ? (o.payment_status === 'refunded' ? 'This order was cancelled and the money has been refunded.' : 'This order was cancelled. Your refund is being processed.')
     : !paid ? 'Payment not completed. If money was deducted, WhatsApp us with your order number.'
-    : at === 4 ? 'Delivered. Enjoy your laptop!' : at === 3 ? 'On the way. It should reach you within 2 days.' : 'We are getting your laptop ready. Delivery in 2 days.';
+    : at === 3 ? 'Delivered. Enjoy your laptop!' : at === 2 ? 'On the way. It should reach you within 2 days.' : 'We are getting your laptop ready. Delivery in 2 days.';
   return (
     <div className="wrap" style={{ maxWidth: 680, padding: '48px 20px 80px' }}>
       <div className={cancelled || !paid ? 'err' : 'ok'}>{note}</div>
