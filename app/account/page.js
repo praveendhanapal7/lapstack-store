@@ -53,7 +53,7 @@ function WarrantyBox({ o, onDone }) {
           : <span>{w.daysLeft} day{w.daysLeft === 1 ? '' : 's'} left (until {day(full ? w.fullUntil : w.serviceUntil)})</span>}
       </div>
       {w.phase !== 'expired' ? (
-        <p className="muted small">{full ? 'Repair or replacement is completely free.' : 'There is no service charge. You pay only for any spare part that has to be replaced.'}</p>
+        <p className="muted small">{full ? 'Repair is completely free.' : 'There is no service charge. You pay only for any spare part that has to be replaced.'}</p>
       ) : null}
       {o.claims.map((c) => (
         <p className="claimline" key={c.id}><b>{CLAIM_LABEL[c.claim_type] || 'Warranty'} claim</b> for {c.item_name} · {when(c.created_at)}<br /><span>{CLAIM_STATE[c.status] || c.status}</span></p>

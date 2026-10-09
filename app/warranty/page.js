@@ -6,7 +6,7 @@ export default function Warranty() {
     <Doc title="Warranty policy" updated={B.updated}>
       <p className="lead">Every laptop from Lapstack comes with a 6 month warranty, counted from the purchase date.</p>
       <h2>Months 1 to 3: full warranty</h2>
-      <p>If the laptop has a hardware fault in normal use, we repair or replace it. You pay nothing.</p>
+      <p>If the laptop has a hardware fault in normal use, we repair it free of cost. You pay nothing.</p>
       <h2>Months 4 to 6: service support</h2>
       <p>Our service charge is zero. If a spare part has to be replaced, you pay only for the spare part.</p>
       <h2>How to claim</h2>

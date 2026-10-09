@@ -225,7 +225,7 @@ export default function AdminClient({ products, orders, sells, claims = [], stat
         {tab === 'warranty' && (
           <>
             <h1>Warranty claims</h1>
-            <p className="muted" style={{ marginBottom: 14 }}>Every laptop has 6 months: <b>full warranty</b> for the first 3 months (repair or replacement is free) and <b>service support</b> for the next 3 (no service charge, customer pays only for spare parts).</p>
+            <p className="muted" style={{ marginBottom: 14 }}>Every laptop has 6 months: <b>full warranty</b> for the first 3 months (repair is free) and <b>service support</b> for the next 3 (no service charge, customer pays only for spare parts).</p>
             <div style={{ display: 'grid', gap: 16 }}>
               {claims.map((c) => (
                 <div className="box" key={c.id}>
