@@ -24,6 +24,8 @@ export async function POST(req) {
   await q('UPDATE login_codes SET used = 1 WHERE email = $1', [email]);
   const u = await one(
     `INSERT INTO users (email) VALUES ($1) ON CONFLICT (email) DO UPDATE SET last_login = now() RETURNING id, (xmax = 0) AS is_new`, [email]);
+  // Orders placed as a guest with this (now verified) email show up in the account.
+  await q('UPDATE orders SET user_id = $1 WHERE user_id IS NULL AND lower(email) = $2', [u.id, email]);
   await setUserCookie(u.id);
   return Response.json({ ok: true, isNew: u.is_new });
 }

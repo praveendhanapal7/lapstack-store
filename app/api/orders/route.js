@@ -7,14 +7,15 @@ export const dynamic = 'force-dynamic';
 const bad = (error, status = 400) => Response.json({ error }, { status });
 
 export async function POST(req) {
+  // Signed-in customers and guests can both order. Guest orders are linked to the account later,
+  // when someone signs in with that email (see app/api/auth/verify).
   const user = await getUser();
-  if (!user) return bad('Please sign in to place your order.', 401);
   let body;
   try { body = await req.json(); } catch { return bad('Invalid request'); }
   const c = body.customer || {};
   const name = String(c.name || '').trim();
   const phone = String(c.phone || '').replace(/\D/g, '').slice(-10);
-  const email = user.email;
+  const email = user ? user.email : String(c.email || '').trim().toLowerCase();
   const address = String(c.address || '').trim();
   const city = String(c.city || '').trim();
   const pincode = String(c.pincode || '').trim();
@@ -22,6 +23,7 @@ export async function POST(req) {
 
   if (name.length < 2) return bad('Please enter your name.');
   if (phone.length !== 10) return bad('Please enter a 10 digit phone number.');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return bad('Please enter a valid email for your order receipt.');
   if (address.length < 5) return bad('Please enter your full address.');
   if (!city) return bad('Please enter your city.');
   if (!/^\d{6}$/.test(pincode)) return bad('Please enter a 6 digit pincode.');
@@ -43,8 +45,8 @@ export async function POST(req) {
   const code = newCode();
   const ins = await one(`INSERT INTO orders (code,name,phone,email,address,city,pincode,items,total,method,payment_status,user_id)
     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,'pending',$11) RETURNING id`,
-    [code, name, phone, email, address, city, pincode, JSON.stringify(lines), total, method, user.id]);
-  if (body.saveAddress) {
+    [code, name, phone, email, address, city, pincode, JSON.stringify(lines), total, method, user ? user.id : null]);
+  if (user && body.saveAddress) {
     // Keep the delivery address (and name/phone) in the customer's profile.
     const dup = await one('SELECT id FROM addresses WHERE user_id=$1 AND address=$2 AND pincode=$3', [user.id, address, pincode]);
     const n = await one('SELECT COUNT(*)::int AS c FROM addresses WHERE user_id=$1', [user.id]);

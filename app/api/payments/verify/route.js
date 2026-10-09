@@ -21,7 +21,7 @@ export async function POST(req) {
   const items = JSON.parse(o.items || '[]');
   if (o.email) await sendMail({
     to: o.email, subject: `Order ${o.code} confirmed`,
-    text: `Thank you for your order!\n\nOrder ${o.code}\n${items.map((i) => `${i.qty} × ${i.name}: ${inr(i.price * i.qty)}`).join('\n')}\n\nTotal paid: ${inr(o.total)} (your bank or UPI app shows this payment as Forward Marketing, the company that runs Lapstack)\nDelivering to: ${o.name}, ${o.address}, ${o.city} ${o.pincode}\n\nSee or cancel your order any time before it ships: https://lapstack.in/account\n\nLapstack · lapstack.in`,
+    text: `Thank you for your order!\n\nOrder ${o.code}\n${items.map((i) => `${i.qty} × ${i.name}: ${inr(i.price * i.qty)}`).join('\n')}\n\nTotal paid: ${inr(o.total)} (your bank or UPI app shows this payment as Forward Marketing, the company that runs Lapstack)\nDelivering to: ${o.name}, ${o.address}, ${o.city} ${o.pincode}\n\nTrack your order: https://lapstack.in/order/${o.code}\nTo cancel before it ships, sign in at https://lapstack.in/account with this email.\n\nLapstack · lapstack.in`,
   });
   await alertShop(`New paid order ${o.code}: ${inr(o.total)}`, [
     ...items.map((i) => `${i.qty} × ${i.name}: ${inr(i.price * i.qty)}`),

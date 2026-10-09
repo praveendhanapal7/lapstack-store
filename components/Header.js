@@ -32,6 +32,7 @@ export default function Header() {
           <Link href="/sell">Sell your laptop</Link>
           <Link href="/about">About us</Link>
           <Link href="/contact">Contact</Link>
+          <Link href="/track">Track order</Link>
           <Link href="/account">{user ? 'My account & orders' : 'Sign in'}</Link>
           <Link href="/refund">Cancellation &amp; refund</Link>
         </nav>
