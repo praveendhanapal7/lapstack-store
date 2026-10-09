@@ -18,8 +18,9 @@ export default async function Home() {
       <section className="hero">
         <div className="wrap">
           <div>
+            <div className="herobadge"><span>🚚</span> 2-day delivery <em>on every laptop</em></div>
             <h1><span className="l1">Premium refurbished laptops.</span><span className="l2">Honest prices.</span></h1>
-            <p>Business-class power from Dell, Lenovo, HP and Apple. Tested, trusted, from ₹21,000. Delivered in 2 days.</p>
+            <p>Business-class power from Dell, Lenovo, HP and Apple. Tested, trusted, from ₹21,000.</p>
             <div className="cta">
               <Link className="btn" href="/laptops">Shop laptops</Link>
               <a className="btn ghost" href={`https://wa.me/${WA}`}>Chat on WhatsApp</a>
