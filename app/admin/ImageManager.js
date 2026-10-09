@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { upload } from '@vercel/blob/client';
+import ImageCropper from './ImageCropper';
 
 const MAX = 5;
 
@@ -30,6 +31,7 @@ export default function ImageManager({ images, onChange, onBusy }) {
   const addRef = useRef(null);
   const swapRef = useRef(null);
   const swapIdx = useRef(-1);
+  const [editing, setEditing] = useState(-1); // photo open in the crop editor
   useEffect(() => { onBusy?.(busy > 0 || replacing >= 0); }, [busy, replacing]); // eslint-disable-line
 
   async function add(files) {
@@ -51,12 +53,20 @@ export default function ImageManager({ images, onChange, onBusy }) {
     catch (e) { setErr(e.message || 'The photo could not be uploaded. Please try again.'); }
     setReplacing(-1);
   }
+  async function saveEdit(file) {
+    const i = editing;
+    setEditing(-1); setErr(''); setReplacing(i);
+    try { const url = await putFile(file); onChange(images.map((u, k) => (k === i ? url : u))); }
+    catch (e) { setErr(e.message || 'The edited photo could not be saved. Please try again.'); }
+    setReplacing(-1);
+  }
+  const moveTo = (i, j) => { const a = [...images]; [a[i], a[j]] = [a[j], a[i]]; onChange(a); };
   const pickSwap = (i) => { swapIdx.current = i; swapRef.current?.click(); };
   const locked = busy > 0 || replacing >= 0;
 
   return (
     <div className="imgmgr">
-      <div className="imgmgr-head"><b>Photos</b><span>{images.length} of {MAX} · the first one is the main photo</span></div>
+      <div className="imgmgr-head"><b>Photos</b><span>{images.length} of {MAX} · the first one is the main photo · use ← → to change the order</span></div>
       {err ? <div className="err">{err}</div> : null}
       <div className="imgs">
         {images.map((u, i) => (
@@ -66,6 +76,11 @@ export default function ImageManager({ images, onChange, onBusy }) {
               {i === 0 ? <span className="mainbadge">Main</span> : null}
               {replacing === i ? <span className="imgbusy">Uploading…</span> : <span className="imghint">Replace</span>}
             </button>
+            <div className="imgacts">
+              <button type="button" disabled={locked || i === 0} onClick={() => moveTo(i, i - 1)} title="Move left">←</button>
+              <button type="button" disabled={locked} onClick={() => setEditing(i)}>Crop</button>
+              <button type="button" disabled={locked || i === images.length - 1} onClick={() => moveTo(i, i + 1)} title="Move right">→</button>
+            </div>
             <div className="imgacts">
               {i > 0 ? <button type="button" disabled={locked} onClick={() => onChange([images[i], ...images.filter((_, k) => k !== i)])}>Make main</button> : <span />}
               <button type="button" className="rm" disabled={locked} onClick={() => onChange(images.filter((_, k) => k !== i))}>Remove</button>
@@ -79,6 +94,7 @@ export default function ImageManager({ images, onChange, onBusy }) {
           </button>
         ) : null}
       </div>
+      {editing >= 0 ? <ImageCropper src={images[editing]} onCancel={() => setEditing(-1)} onDone={saveEdit} /> : null}
       <input ref={addRef} type="file" accept="image/*" multiple hidden onChange={(e) => { add(e.target.files); e.target.value = ''; }} />
       <input ref={swapRef} type="file" accept="image/*" hidden onChange={(e) => { swap(e.target.files[0]); e.target.value = ''; }} />
     </div>
