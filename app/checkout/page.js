@@ -15,7 +15,7 @@ export default function Checkout() {
   const [pick, setPick] = useState('new'); // saved address id, or 'new'
   const [save, setSave] = useState(true);
   const [info, setInfo] = useState({});
-  const [cfg, setCfg] = useState({ razorpay: false });
+  const [cfg, setCfg] = useState({ razorpay: true }); // assume on until /api/config says otherwise (no false alarm while loading)
   const [f, setF] = useState({ name: '', phone: '', email: '', address: '', city: '', pincode: '' });
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
@@ -128,7 +128,7 @@ export default function Checkout() {
           <h3>Payment</h3>
           <div className="securepay"><b>Secure online payment</b><span>UPI, cards and netbanking via Razorpay</span></div>
           <p className="paynote">Your payment will show as <b>Forward Marketing</b>, the company that runs Lapstack. It is safe and goes straight to us.</p>
-          {!cfg.razorpay ? <div className="err">Online payment is not switched on yet. Add Razorpay keys to enable checkout.</div> : null}
+          {!cfg.razorpay ? <div className="err">Online payment is not available right now. Please WhatsApp us to place your order.</div> : null}
           {lines.map((l) => <div className="sum" key={l.id}><span>{l.p.name} × {l.qty}</span><span>{inr(l.p.price * l.qty)}</span></div>)}
           <div className="sum t"><span>Total</span><span>{inr(total)}</span></div>
           <button className="btn" style={{ width: '100%', marginTop: 14 }} disabled={busy || !lines.length || !cfg.razorpay}>{busy ? 'Please wait…' : 'Pay ' + inr(total)}</button>
