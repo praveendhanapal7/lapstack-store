@@ -437,3 +437,4 @@ h2.title,.contact h2,.sellcta h2{font-weight:600;letter-spacing:-.045em}
 /* HD studio photos: show the whole laptop on white, never cropped */
 .card .ph:has(img[src*="/laptops/hd"]),.gal .ph:has(img[src*="/laptops/hd"]){background:#fff}
 .card .ph img[src*="/laptops/hd"],.gal .ph img[src*="/laptops/hd"]{object-fit:contain}
+.suggest{padding:8px 0 80px;border-top:1px solid #ececf0;padding-top:48px}

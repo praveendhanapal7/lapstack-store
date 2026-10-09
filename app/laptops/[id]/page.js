@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
-import { getProduct } from '@/lib/db';
+import { getProduct, listProducts } from '@/lib/db';
+import ProductCard from '@/components/ProductCard';
 import { inr, productImages } from '@/lib/format';
 import Gallery from '@/components/Gallery';
 import AddToCart from '@/components/AddToCart';
@@ -25,6 +26,12 @@ export default async function Detail({ params }) {
   const p = await getProduct(Number(id));
   if (!p || !p.active) notFound();
   const WA = process.env.NEXT_PUBLIC_WHATSAPP || '919345145774';
+  // Suggestions: other laptops in stock, same brand first, then closest in price.
+  const brand = p.name.split(' ')[0];
+  const suggested = (await listProducts())
+    .filter((x) => x.id !== p.id && x.stock > 0)
+    .sort((a, b) => (b.name.startsWith(brand) - a.name.startsWith(brand)) || Math.abs(a.price - p.price) - Math.abs(b.price - p.price))
+    .slice(0, 4);
   const rows = [['Processor', p.cpu], ['Graphics card', p.gpu], ['Memory', p.ram], ['Storage', p.storage], ['Display', p.display], ['Warranty', '6 months: 3 months full warranty + 3 months service support'], ['Availability', p.stock > 0 ? 'In stock' : 'Sold out']].filter((r) => r[1]);
   return (
     <div className="wrap">
@@ -43,6 +50,12 @@ export default async function Detail({ params }) {
           <p style={{ fontSize: 12, color: 'var(--muted)' }}>Photo is representative of the model.</p>
         </div>
       </div>
+      {suggested.length ? (
+        <section className="suggest">
+          <h2 className="title" style={{ fontSize: 32, marginBottom: 20 }}>You may also like</h2>
+          <div className="grid">{suggested.map((x) => <ProductCard key={x.id} p={x} />)}</div>
+        </section>
+      ) : null}
     </div>
   );
 }
