@@ -1,10 +1,14 @@
 import { notFound } from 'next/navigation';
 import { getOrderByCode } from '@/lib/orders';
 import { inr } from '@/lib/format';
+import OrderAccount from '@/components/OrderAccount';
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Your order — Lapstack' };
 
 const STEPS = [['paid', 'Payment received'], ['confirmed', 'Confirmed'], ['shipped', 'Shipped'], ['delivered', 'Delivered']];
+
+// Hide most of the email: this page is opened by order number only.
+const mask = (e) => e.replace(/^(.{2})[^@]*(@.*)$/, (m, a, b) => a + '****' + b);
 
 export default async function OrderPage({ params }) {
   const { id } = await params;
@@ -23,6 +27,7 @@ export default async function OrderPage({ params }) {
     <div className="wrap" style={{ maxWidth: 680, padding: '48px 20px 80px' }}>
       <div className={cancelled || !paid ? 'err' : 'ok'}>{note}</div>
       <h1 style={{ fontSize: 34 }}>Order {o.code}</h1>
+      {paid && o.email ? <p className="sentnote">📧 Order details were sent to <b>{mask(o.email)}</b>. Check your inbox (and spam).</p> : null}
       {paid && !cancelled ? (
         <ol className="otrack">
           {STEPS.map(([k, label], i) => <li key={k} className={i + 1 <= at ? 'done' : ''}><i>{i + 1 <= at ? '✓' : i + 1}</i>{label}</li>)}
@@ -33,6 +38,7 @@ export default async function OrderPage({ params }) {
         <div className="sum t"><span>Total</span><span>{inr(o.total)}</span></div>
         <p style={{ color: 'var(--muted)', fontSize: 14 }}>Delivering to {o.name}, {o.city} {o.pincode}</p>
       </div>
+      {paid ? <OrderAccount email={mask(o.email || '')} /> : null}
       <p className="muted small">Bookmark this page to check your order any time, or use <a href="/track" style={{ textDecoration: 'underline' }}>Track order</a> with your order number and phone. To cancel before it ships, <a href="/account" style={{ textDecoration: 'underline' }}>sign in</a> with the email you used.</p>
       <a className="btn" href={`https://wa.me/${WA}?text=${encodeURIComponent('Hi, my order is ' + o.code)}`}>Message us on WhatsApp</a>
     </div>

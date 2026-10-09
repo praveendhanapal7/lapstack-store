@@ -31,10 +31,10 @@ const post = async (url, body) => {
 };
 
 /** Two steps: enter email, then the 6-digit code we email. */
-export function SignIn({ title = 'Sign in', note, onDone }) {
+export function SignIn({ title = 'Sign in', note, onDone, email: startEmail = '', button = 'Email me a code' }) {
   const { refresh } = useAuth();
   const [step, setStep] = useState('email');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(startEmail);
   const [code, setCode] = useState('');
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
@@ -60,7 +60,7 @@ export function SignIn({ title = 'Sign in', note, onDone }) {
       {step === 'email' ? (
         <form onSubmit={send}>
           <label className="f">Your email<input type="email" required autoComplete="email" inputMode="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} /></label>
-          <button className="btn" style={{ width: '100%' }} disabled={busy}>{busy ? 'Sending…' : 'Email me a code'}</button>
+          <button className="btn" style={{ width: '100%' }} disabled={busy}>{busy ? 'Sending…' : button}</button>
           <p className="muted small">No password needed. We will email you a 6-digit code.</p>
         </form>
       ) : (
