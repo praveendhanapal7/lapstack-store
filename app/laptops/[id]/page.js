@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getProduct, listProducts } from '@/lib/db';
 import ProductCard from '@/components/ProductCard';
@@ -50,12 +51,15 @@ export default async function Detail({ params }) {
           <p style={{ fontSize: 12, color: 'var(--muted)' }}>Photo is representative of the model.</p>
         </div>
       </div>
-      {suggested.length ? (
-        <section className="suggest">
-          <h2 className="title" style={{ fontSize: 32, marginBottom: 20 }}>You may also like</h2>
-          <div className="grid">{suggested.map((x) => <ProductCard key={x.id} p={x} />)}</div>
-        </section>
-      ) : null}
+      <section className="suggest">
+        {suggested.length ? (
+          <>
+            <h2 className="title" style={{ fontSize: 32, marginBottom: 20 }}>You may also like</h2>
+            <div className="grid">{suggested.map((x) => <ProductCard key={x.id} p={x} />)}</div>
+          </>
+        ) : null}
+        <p style={{ marginTop: 28, textAlign: 'center' }}><Link className="btn ghost" href="/laptops">See all laptops →</Link></p>
+      </section>
     </div>
   );
 }
