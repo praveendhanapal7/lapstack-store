@@ -34,7 +34,8 @@ export default async function Detail({ params }) {
         <div>
           <div className="eyebrow">Refurbished</div>
           <h1 style={{ fontSize: 44 }}>{p.name}</h1>
-          <div className="price" style={{ fontSize: 30, margin: '14px 0' }}>{inr(p.price)}</div>
+          <div className="price" style={{ fontSize: 30, margin: '14px 0 6px' }}>{inr(p.price)}</div>
+          <p className="eta">🚚 Delivered in 2 days</p>
           <table className="spec-table"><tbody>{rows.map(([k, v]) => <tr key={k}><td>{k}</td><td>{v}</td></tr>)}</tbody></table>
           {p.note ? <p style={{ color: 'var(--muted)' }}>{p.note}</p> : null}
           <AddToCart id={p.id} stock={p.stock} name={p.name} price={p.price} />

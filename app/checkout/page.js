@@ -103,7 +103,7 @@ export default function Checkout() {
       {steps(2)}
       <form className="two" style={{ padding: 0 }} onSubmit={submit}>
         <div className="panel">
-          <h3 style={{ marginBottom: 6 }}>Delivery details</h3>
+          <h3 style={{ marginBottom: 6 }}>Delivery details <span className="eta" style={{ marginLeft: 6 }}>🚚 2-day delivery</span></h3>
           <p className="muted small" style={{ marginBottom: 14 }}>Signed in as <b>{user.email}</b>. Order updates go to this email.</p>
           {err ? <div className="err">{err}</div> : null}
           {addresses.length ? (

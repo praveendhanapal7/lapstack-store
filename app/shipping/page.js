@@ -7,9 +7,9 @@ export default function Shipping() {
       <h2>Coverage</h2>
       <p>We deliver across India through trusted courier partners.</p>
       <h2>Dispatch time</h2>
-      <p>Orders are dispatched within 1 to 3 business days after confirmation.</p>
+      <p>Orders are dispatched within 1 business day after confirmation.</p>
       <h2>Delivery time</h2>
-      <p>Delivery usually takes 3 to 7 business days depending on your location. You will receive tracking details by call, WhatsApp or email once your order ships.</p>
+      <p>We deliver in 2 days. Remote locations or courier delays can occasionally add a day or two. You will receive tracking details by call, WhatsApp or email once your order ships.</p>
       <h2>Shipping charges</h2>
       <p>We do not add shipping charges unless they are shown at checkout.</p>
       <h2>On delivery</h2>

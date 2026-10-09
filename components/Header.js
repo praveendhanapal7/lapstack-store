@@ -9,6 +9,8 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
   return (
+    <>
+    <div className="shipbar">🚚 2-day delivery on every laptop</div>
     <header className="top">
       <div className="wrap">
         <Link href="/" className="brand" onClick={close}><img src="/logo.png" alt="" /><span>Lapstack</span></Link>
@@ -33,5 +35,6 @@ export default function Header() {
         </nav>
       ) : null}
     </header>
+    </>
   );
 }

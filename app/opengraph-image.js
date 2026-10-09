@@ -19,7 +19,7 @@ export default async function Image() {
         </div>
         <div style={{ fontSize: 66, color: "#1d1d1f", marginTop: 50, letterSpacing: -2, lineHeight: 1.15 }}>Premium refurbished laptops.</div>
         <div style={{ fontSize: 66, color: "#B88A00", letterSpacing: -2, lineHeight: 1.15 }}>Honest prices.</div>
-        <div style={{ fontSize: 34, color: '#555', marginTop: 34 }}>Dell · Lenovo · HP · Apple. Tested and delivered across India.</div>
+        <div style={{ fontSize: 34, color: '#555', marginTop: 34 }}>Dell · Lenovo · HP · Apple. Tested. Delivered in 2 days.</div>
       </div>
     ),
     size

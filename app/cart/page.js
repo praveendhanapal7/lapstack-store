@@ -46,7 +46,7 @@ export default function Cart() {
           <div className="panel">
             <h3 style={{ marginBottom: 10 }}>Summary</h3>
             <div className="sum t"><span>Total</span><span>{inr(total)}</span></div>
-            <p style={{ fontSize: 13, color: 'var(--muted)' }}>Delivery details are taken at checkout.</p>
+            <p style={{ fontSize: 13, color: 'var(--muted)' }}>🚚 Delivered in 2 days. Delivery details are taken at checkout.</p>
             {problem ? <div className="err">Reduce quantity of sold-out items to continue.</div> : null}
             <Link href="/checkout" className="btn" style={{ width: '100%', pointerEvents: problem ? 'none' : 'auto', opacity: problem ? .5 : 1 }}>Checkout</Link>
           </div>

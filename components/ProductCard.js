@@ -10,6 +10,7 @@ export default function ProductCard({ p }) {
       <div className="body">
         <h3>{p.name}</h3>
         <div className="chips">{[p.cpu, p.ram, p.storage].filter(Boolean).map((x) => <span key={x}>{x}</span>)}</div>
+        {p.stock > 0 ? <small className="cardeta">🚚 2-day delivery</small> : null}
         <div className="foot"><span className="price">{inr(p.price)}</span><span className="more">View →</span></div>
       </div>
     </Link>

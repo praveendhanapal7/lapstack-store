@@ -12,7 +12,7 @@ const PIXEL = (process.env.NEXT_PUBLIC_META_PIXEL_ID || '3214943238710618').repl
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://lapstack.in'),
   title: 'Lapstack — Premium refurbished laptops',
-  description: 'Tested, ready-to-use refurbished laptops from ₹21,000. Buy online, delivered to your door.',
+  description: 'Tested, ready-to-use refurbished laptops from ₹21,000. Buy online, delivered to your door in 2 days.',
   openGraph: { siteName: 'Lapstack', type: 'website', locale: 'en_IN' },
 };
 
