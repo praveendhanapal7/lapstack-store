@@ -35,7 +35,7 @@ export async function POST(req) {
     const p = await getProduct(Number(it.id));
     const qty = Math.max(1, Math.min(10, parseInt(it.qty, 10) || 1));
     if (!p || !p.active) return bad('A laptop in your cart is no longer available.');
-    if (p.stock < qty) return bad(`${p.name} has only ${p.stock} left.`);
+    if (p.stock < qty) return bad(p.stock < 1 ? `${p.name} is sold out.` : `${p.name} is not available in this quantity.`);
     lines.push({ id: p.id, name: p.name, price: p.price, qty, image: p.image });
     total += p.price * qty;
   }

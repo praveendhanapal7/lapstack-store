@@ -10,7 +10,7 @@ const ORDER_ST = ['new', 'confirmed', 'shipped', 'delivered', 'cancelled'];
 const PAY_ST = ['pending', 'paid', 'failed', 'refunded', 'refund_pending', 'refunding'];
 const SELL_ST = ['new', 'contacted', 'purchased', 'rejected'];
 const CLAIM_ST = ['new', 'contacted', 'in_repair', 'resolved', 'rejected'];
-const blank = { name: '', cpu: '', ram: '', storage: '', display: '', price: '', stock: 1, image: '', images: [], note: '', warranty: false, active: true };
+const blank = { name: '', cpu: '', ram: '', storage: '', display: '', gpu: '', price: '', stock: 1, image: '', images: [], note: '', warranty: false, active: true };
 const post = (url, method, body) => fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
 const fmt = (d) => new Date(d.replace(' ', 'T') + 'Z').toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
 
@@ -279,6 +279,7 @@ export default function AdminClient({ products, orders, sells, claims = [], stat
               <label className="f">Display<input value={edit.display} onChange={s('display')} /></label>
               <label className="f">RAM<input value={edit.ram} onChange={s('ram')} /></label>
               <label className="f">Storage<input value={edit.storage} onChange={s('storage')} /></label>
+              <label className="f">Graphics card <small className="muted">(leave empty if none)</small><input value={edit.gpu || ''} placeholder="e.g. NVIDIA RTX A2000 4GB" onChange={s('gpu')} /></label>
               <label className="f">Price (₹)<input type="number" value={edit.price} onChange={s('price')} /></label>
               <label className="f">Stock<input type="number" min="0" value={edit.stock} onChange={s('stock')} /></label>
             </div>

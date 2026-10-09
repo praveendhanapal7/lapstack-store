@@ -8,8 +8,8 @@ export async function PUT(req, { params }) {
   const { id } = await params;
   const { value: v, error } = cleanProduct(await req.json().catch(() => ({})));
   if (error) return Response.json({ error }, { status: 400 });
-  await q(`UPDATE products SET name=$1,cpu=$2,ram=$3,storage=$4,display=$5,price=$6,stock=$7,image=$8,images=$9,note=$10,warranty=$11,active=$12 WHERE id=$13`,
-    [v.name, v.cpu, v.ram, v.storage, v.display, v.price, v.stock, v.image, v.images, v.note, v.warranty, v.active, Number(id)]);
+  await q(`UPDATE products SET name=$1,cpu=$2,ram=$3,storage=$4,display=$5,price=$6,stock=$7,image=$8,images=$9,note=$10,warranty=$11,active=$12,gpu=$14 WHERE id=$13`,
+    [v.name, v.cpu, v.ram, v.storage, v.display, v.price, v.stock, v.image, v.images, v.note, v.warranty, v.active, Number(id), v.gpu]);
   return Response.json({ ok: true });
 }
 export async function DELETE(req, { params }) {

@@ -31,7 +31,7 @@ export default function Cart() {
                 <div>
                   <Link href={`/laptops/${l.id}`} style={{ fontWeight: 700 }}>{l.p.name}</Link>
                   <div>{inr(l.p.price)}</div>
-                  {l.p.stock < l.qty ? <div style={{ color: 'var(--red)', fontSize: 13 }}>Only {l.p.stock} left</div> : null}
+                  {l.p.stock < l.qty ? <div style={{ color: 'var(--red)', fontSize: 13 }}>{l.p.stock < 1 ? 'Sold out' : 'Not available in this quantity'}</div> : null}
                 </div>
                 <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
                   <div className="qty">

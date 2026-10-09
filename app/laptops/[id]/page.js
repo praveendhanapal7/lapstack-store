@@ -12,7 +12,7 @@ export async function generateMetadata({ params }) {
   const p = await getProduct(Number(id));
   if (!p || !p.active) return {};
   const title = `${p.name}: ${inr(p.price)}`;
-  const description = [p.cpu, p.ram, p.storage, p.display].filter(Boolean).join(' · ');
+  const description = [p.cpu, p.gpu, p.ram, p.storage, p.display].filter(Boolean).join(' · ');
   return {
     title: `${title} | Lapstack`,
     description,
@@ -25,7 +25,7 @@ export default async function Detail({ params }) {
   const p = await getProduct(Number(id));
   if (!p || !p.active) notFound();
   const WA = process.env.NEXT_PUBLIC_WHATSAPP || '919345145774';
-  const rows = [['Processor', p.cpu], ['Memory', p.ram], ['Storage', p.storage], ['Display', p.display], ['Warranty', '6 months: 3 months full warranty + 3 months service support'], ['Availability', p.stock > 0 ? `${p.stock} in stock` : 'Sold out']].filter((r) => r[1]);
+  const rows = [['Processor', p.cpu], ['Graphics card', p.gpu], ['Memory', p.ram], ['Storage', p.storage], ['Display', p.display], ['Warranty', '6 months: 3 months full warranty + 3 months service support'], ['Availability', p.stock > 0 ? 'In stock' : 'Sold out']].filter((r) => r[1]);
   return (
     <div className="wrap">
       <div className="detail">
