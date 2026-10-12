@@ -234,7 +234,7 @@ h2.title,.contact h2,.sellcta h2{font-weight:600;letter-spacing:-.045em}
 @media(max-width:860px){
  header.top .wrap{gap:10px}
  header.top .cartlink{margin-left:auto}
- .burger{display:block}
+ .burger{display:block;margin-left:auto}
  .mobnav{display:flex;flex-direction:column;background:rgba(255,255,255,.97);backdrop-filter:blur(20px);border-top:1px solid #ececf0;padding:8px 22px 20px}
  .mobnav a{padding:15px 0;font-size:22px;font-weight:600;letter-spacing:-.03em;border-bottom:1px solid #f0f0f2}
  .wrap{padding-inline:18px}
@@ -462,3 +462,11 @@ h2.title,.contact h2,.sellcta h2{font-weight:600;letter-spacing:-.045em}
 .crop-box .h{position:absolute;width:18px;height:18px;background:#FDC500;border:2px solid #fff;border-radius:50%;touch-action:none}
 .crop-box .h.tl{left:-3px;top:-3px;cursor:nwse-resize}.crop-box .h.tr{right:-3px;top:-3px;cursor:nesw-resize}
 .crop-box .h.bl{left:-3px;bottom:-3px;cursor:nesw-resize}.crop-box .h.br{right:-3px;bottom:-3px;cursor:nwse-resize}
+/* booking buttons (replace the cart) */
+.bookbtns{display:grid;gap:10px;max-width:440px}
+.bookbtns .btn{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:14px 20px;border-radius:18px;width:100%}
+.bookbtns .btn span{font-size:16px;font-weight:700}.bookbtns .btn small{font-size:12.5px;font-weight:500;opacity:.75}
+.bookform{position:relative;max-width:520px;width:100%;max-height:92vh;overflow:auto}
+.bookform h3{margin-bottom:2px}
+.bookform select{width:100%}
+.bookx{position:absolute;right:12px;top:10px;border:0;background:none;font-size:26px;line-height:1;cursor:pointer;color:#666}

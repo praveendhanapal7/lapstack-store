@@ -1,10 +1,8 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
-import { useCart } from './CartProvider';
 import { useAuth } from './Auth';
 export default function Header() {
-  const { count } = useCart();
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
@@ -22,7 +20,6 @@ export default function Header() {
           <Link href="/contact">Contact</Link>
         </nav>
         <Link href="/account" className="acctlink" onClick={close}>{user ? 'Account' : 'Sign in'}</Link>
-        <Link href="/cart" className="cartlink" onClick={close}>Cart <b>{count}</b></Link>
         <button className={'burger' + (open ? ' on' : '')} aria-label="Menu" onClick={() => setOpen(!open)}><i /><i /></button>
       </div>
       {open ? (

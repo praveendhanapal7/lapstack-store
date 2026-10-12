@@ -41,7 +41,7 @@ export default async function Home() {
         <div className="wrap">
           <div><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></i><b>Tested</b><span>Checked before listing</span></div>
           <div><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z" /></svg></i><b>6 month warranty</b><span>On every laptop</span></div>
-          <div><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 018 0v3" /></svg></i><b>Secure payment</b><span>UPI, cards, netbanking</span></div>
+          <div><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 018 0v3" /></svg></i><b>See before you buy</b><span>Shop visit or video call</span></div>
           <div><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7" /><circle cx="7" cy="18" r="1.8" /><circle cx="17" cy="18" r="1.8" /></svg></i><b>2-day delivery</b><span>To your door</span></div>
         </div>
       </section>
@@ -73,8 +73,8 @@ export default async function Home() {
           <h2 className="title">Three simple steps</h2>
           <div className="steps">
             <div className="step"><h3>Choose</h3><p>Browse laptops by budget and specs.</p></div>
-            <div className="step"><h3>Order</h3><p>Pay securely online.</p></div>
-            <div className="step"><h3>Delivered</h3><p>Packed carefully and at your door in 2 days.</p></div>
+            <div className="step"><h3>Book</h3><p>Visit our shop, or see it live on a video call.</p></div>
+            <div className="step"><h3>Take it home</h3><p>Pick it up at the shop, or get it at your door in 2 days.</p></div>
           </div>
         </div>
       </section>
