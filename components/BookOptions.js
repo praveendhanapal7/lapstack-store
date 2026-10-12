@@ -15,13 +15,16 @@ export default function BookOptions({ id, name, price, stock }) {
   return (
     <>
       <div className="bookbtns">
-        <button className="btn" onClick={() => open('visit')}>
-          <span>🏬 Visit &amp; Purchase</span><small>See it at our shop in Coimbatore</small>
+        <button className="bookbtn dark" onClick={() => open('visit')}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9M3 9v11h18V9M3 9h18M9 20v-6h6v6" /></svg>
+          Visit &amp; Purchase
         </button>
-        <button className="btn ghost" onClick={() => open('video')}>
-          <span>📹 Order Through Video Call</span><small>We show you the laptop live on WhatsApp</small>
+        <button className="bookbtn" onClick={() => open('video')}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2.5" /><path d="M16 10.5l5-3v9l-5-3" /></svg>
+          Order via Video Call
         </button>
       </div>
+      <p className="booknote">Free · No payment now · We confirm on WhatsApp</p>
       {kind ? <BookForm kind={kind} id={id} name={name} price={price} onClose={() => setKind(null)} /> : null}
     </>
   );
