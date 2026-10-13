@@ -44,7 +44,7 @@ function BookForm({ kind, id, name, price, onClose }) {
       const r = await fetch('/api/enquiries', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...f, kind, productId: id }) });
       const d = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(d.error || 'Something went wrong. Please try again.');
-      track('Lead', { ...product({ id, name, price }), content_category: visit ? 'Shop visit' : 'Video call' });
+      track('Lead', { ...product({ id, name, price }), content_category: visit ? 'Shop visit' : 'Video call' }, { eventID: d.eventId });
       setDone(true);
     } catch (x) { setErr(x.message); }
     setBusy(false);

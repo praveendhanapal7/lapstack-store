@@ -4,6 +4,7 @@ import { alertShop } from '@/lib/notify';
 import { BUSINESS as B } from '@/lib/business';
 import { KINDS, SLOTS } from '@/lib/enquiry';
 import { inr } from '@/lib/format';
+import { sendCapi, visitor } from '@/lib/capi';
 export const dynamic = 'force-dynamic';
 const bad = (error) => Response.json({ error }, { status: 400 });
 const clip = (v, n) => String(v ?? '').trim().slice(0, n);
@@ -42,5 +43,12 @@ export async function POST(req) {
       ? `Hi ${name},\n\nThanks! We have noted your visit.\n\nLaptop: ${laptop}\nWhen: ${when}\n\nWe will WhatsApp you on +91 ${phone} to confirm.\n\nShop address:\n${B.address}\nMap: https://maps.google.com/?q=${encodeURIComponent(B.address)}\nPhone: ${B.phone}\n\nLapstack · lapstack.in`
       : `Hi ${name},\n\nThanks! Your video call is booked.\n\nLaptop: ${laptop}\nWhen: ${when}\n\nWe will video call you on WhatsApp at +91 ${phone} and show you the laptop live.\n\nQuestions? ${B.phone}\n\nLapstack · lapstack.in`,
   });
-  return Response.json({ ok: true, id: row.id });
+  // Tell Meta about the booking from our server (the browser sends the same event id, so it counts once).
+  const eventId = 'lead-' + row.id;
+  await sendCapi({
+    name: 'Lead', id: eventId, url: product ? `https://lapstack.in/laptops/${product.id}` : 'https://lapstack.in/laptops',
+    who: visitor(req), email, phone, city,
+    custom: { content_ids: product ? [String(product.id)] : undefined, content_name: product?.name, content_type: 'product', content_category: kind === 'visit' ? 'Shop visit' : 'Video call', value: product?.price || undefined, currency: product ? 'INR' : undefined },
+  });
+  return Response.json({ ok: true, id: row.id, eventId });
 }
