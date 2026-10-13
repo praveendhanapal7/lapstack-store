@@ -15,10 +15,10 @@ export async function POST(req) {
   const kind = b.kind === 'video' ? 'video' : b.kind === 'visit' ? 'visit' : '';
   const name = clip(b.name, 80), email = clip(b.email, 120).toLowerCase(), city = clip(b.city, 60);
   const phone = String(b.phone || '').replace(/\D/g, '').slice(-10);
-  const date = clip(b.date, 10), time = SLOTS.includes(b.time) ? b.time : '', note = clip(b.note, 500);
+  const date = clip(b.date, 10), time = SLOTS.includes(b.time) ? b.time : 'Any time', note = clip(b.note, 500);
   if (!kind) return bad('Please choose visit or video call.');
   if (name.length < 2) return bad('Please enter your name.');
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return bad('Please enter a valid email.');
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return bad('Please check your email, or leave it empty.');
   if (city.length < 2) return bad('Please enter your city.');
   if (phone.length !== 10) return bad('Please enter a 10 digit WhatsApp number.');
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return bad('Please pick a date.');
@@ -36,7 +36,7 @@ export async function POST(req) {
     KINDS[kind], `Laptop: ${laptop}`, `Name: ${name}`, `WhatsApp: +91 ${phone}`, `Email: ${email}`, `City: ${city}`, `When: ${when}`, note ? `Note: ${note}` : '',
     `Reply on WhatsApp: https://wa.me/91${phone}`,
   ]);
-  await sendMail({
+  if (email) await sendMail({
     to: email,
     subject: kind === 'visit' ? 'Your Lapstack shop visit is booked' : 'Your Lapstack video call is booked',
     text: kind === 'visit'

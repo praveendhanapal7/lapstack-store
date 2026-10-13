@@ -44,9 +44,9 @@ export default async function Detail({ params }) {
           <h1 style={{ fontSize: 44 }}>{p.name}</h1>
           <div className="price" style={{ fontSize: 30, margin: '14px 0 6px' }}>{inr(p.price)}</div>
           <p className="eta">🚚 Delivered in 2 days</p>
+          <BookOptions id={p.id} stock={p.stock} name={p.name} price={p.price} wa={WA} />
           <table className="spec-table"><tbody>{rows.map(([k, v]) => <tr key={k}><td>{k}</td><td>{v}</td></tr>)}</tbody></table>
           {p.note ? <p style={{ color: 'var(--muted)' }}>{p.note}</p> : null}
-          <BookOptions id={p.id} stock={p.stock} name={p.name} price={p.price} />
           <p style={{ marginTop: 18 }}><a href={`https://wa.me/${WA}?text=${encodeURIComponent('Hi, I am interested in ' + p.name)}`} style={{ fontWeight: 700, textDecoration: 'underline' }}>Ask about this laptop on WhatsApp</a></p>
           <p style={{ fontSize: 12, color: 'var(--muted)' }}>Photo is representative of the model.</p>
         </div>
