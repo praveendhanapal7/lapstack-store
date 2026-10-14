@@ -93,16 +93,17 @@ export default function Account() {
   if (!user) return (
     <div className="wrap" style={{ padding: '40px 20px', maxWidth: 520 }}>
       <h1 style={{ fontSize: 34, marginBottom: 16 }}>My account</h1>
-      <SignIn title="Sign in" note="See your orders, cancel an order and claim warranty. New here? Just enter your email; your account is created automatically." />
+      <SignIn title="Sign in" note="See your orders, cancel an order, and keep your cart and addresses saved. New here? Just enter your email; your account is created automatically." />
     </div>
   );
-  const tabs = [['orders', 'Orders'], ['addresses', 'Addresses'], ['profile', 'Profile']];
+  const tabs = [['orders', 'Orders'], ['cart', 'Cart'], ['addresses', 'Addresses'], ['profile', 'Profile']];
   return (
     <div className="wrap" style={{ padding: '36px 20px', maxWidth: 820 }}>
       <h1 style={{ fontSize: 34 }}>My account</h1>
       <p className="muted" style={{ margin: '4px 0 18px' }}>{user.name ? `${user.name} · ` : ''}{user.email}</p>
       <div className="tabs">{tabs.map(([k, t]) => <button key={k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}>{t}</button>)}</div>
       {tab === 'orders' ? <Orders /> : null}
+      {tab === 'cart' ? <CartTab /> : null}
       {tab === 'addresses' ? <Addresses addresses={addresses} refresh={refresh} /> : null}
       {tab === 'profile' ? <Profile user={user} refresh={refresh} logout={logout} /> : null}
     </div>

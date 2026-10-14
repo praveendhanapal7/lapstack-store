@@ -5,7 +5,6 @@ import { upload as blobUpload } from '@vercel/blob/client';
 import { inr, productImages } from '@/lib/format';
 import ImageManager from './ImageManager';
 import Traffic from './Traffic';
-import { KINDS, ENQ_STATUS } from '@/lib/enquiry';
 
 const ORDER_ST = ['new', 'confirmed', 'shipped', 'delivered', 'cancelled'];
 const PAY_ST = ['pending', 'paid', 'failed', 'refunded', 'refund_pending', 'refunding'];
@@ -33,7 +32,7 @@ function Bars({ days, field, money }) {
   );
 }
 
-export default function AdminClient({ products, orders, sells, claims = [], enquiries = [], stats }) {
+export default function AdminClient({ products, orders, sells, claims = [], stats }) {
   const router = useRouter();
   const [tab, setTab] = useState('dashboard');
   const [edit, setEdit] = useState(null);
@@ -78,8 +77,8 @@ export default function AdminClient({ products, orders, sells, claims = [], enqu
     a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = 'lapstack-payments.csv'; a.click();
   }
 
-  const NAV = [['dashboard', 'Dashboard'], ['enquiries', 'Bookings'], ['analytics', 'Analytics'], ['orders', 'Orders'], ['products', 'Products'], ['payments', 'Payments'], ['warranty', 'Warranty'], ['sell', 'Sell requests']];
-  const badge = { orders: k.newOrders, sell: k.newSell, warranty: k.newClaims, enquiries: k.newEnquiries };
+  const NAV = [['dashboard', 'Dashboard'], ['analytics', 'Analytics'], ['orders', 'Orders'], ['products', 'Products'], ['payments', 'Payments'], ['warranty', 'Warranty'], ['sell', 'Sell requests']];
+  const badge = { orders: k.newOrders, sell: k.newSell, warranty: k.newClaims };
 
   return (
     <div className="adm">
@@ -127,35 +126,6 @@ export default function AdminClient({ products, orders, sells, claims = [], enqu
                 {stats.byMethod.map((r) => <div className="line" key={r.m}><span>{r.m === 'cod' ? 'Cash on delivery' : 'Online (Razorpay)'} · {r.c} orders</span><b>{inr(r.amt)}</b></div>)}
                 {!stats.byMethod.length && <p className="muted">No orders yet.</p>}
               </div>
-            </div>
-          </>
-        )}
-
-        {tab === 'enquiries' && (
-          <>
-            <h1>Bookings</h1>
-            <p className="muted" style={{ marginTop: -6, marginBottom: 16 }}>Shop visits and video calls booked from the laptop pages. Reply on WhatsApp, then update the status.</p>
-            <div style={{ display: 'grid', gap: 14 }}>
-              {enquiries.map((r) => (
-                <div className="box" key={r.id}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-                    <div>
-                      <span className={'tag ' + (r.kind === 'visit' ? 'confirmed' : 'shipped')}>{r.kind === 'visit' ? '🏬 ' : '📹 '}{KINDS[r.kind]}</span>
-                      <b style={{ display: 'block', fontSize: 18, marginTop: 6 }}>{r.name} · {r.city}</b>
-                      <small>{r.product_name ? `${r.product_name} (${inr(r.price)})` : 'No laptop chosen'} · booked {fmt(r.created_at)}</small>
-                    </div>
-                    <select className="inp" style={{ width: 170 }} value={r.status} onChange={async (e) => { await post('/api/admin/enquiries/' + r.id, 'PATCH', { status: e.target.value }); refresh(); }}>{ENQ_STATUS.map((x) => <option key={x}>{x}</option>)}</select>
-                  </div>
-                  <p style={{ margin: '10px 0 6px' }}><b>{r.kind === 'visit' ? 'Visit' : 'Call'}:</b> {new Date(r.pref_date + 'T00:00:00').toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}, {r.pref_time}</p>
-                  {r.note ? <p className="muted" style={{ margin: '0 0 8px' }}>“{r.note}”</p> : null}
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                    <a className="btn sm" href={`https://wa.me/91${r.phone}?text=${encodeURIComponent(`Hi ${r.name}, this is Lapstack about your ${r.kind === 'visit' ? 'shop visit' : 'video call'}${r.product_name ? ' for the ' + r.product_name : ''}.`)}`} target="_blank" rel="noreferrer">WhatsApp +91 {r.phone}</a>
-                    <a className="btn sm ghost" href={'tel:+91' + r.phone}>Call</a>
-                    <a className="btn sm ghost" href={'mailto:' + r.email}>{r.email}</a>
-                  </div>
-                </div>
-              ))}
-              {!enquiries.length && <p className="empty">No bookings yet.</p>}
             </div>
           </>
         )}

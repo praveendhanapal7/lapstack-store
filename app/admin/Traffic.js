@@ -22,7 +22,7 @@ export default function Traffic() {
   }, [range]);
 
   const max = d ? Math.max(1, ...d.series.map((s) => s.sessions)) : 1;
-  const funnel = d ? [['Sessions', d.sessions], ['Viewed a laptop', d.productViewers], ['Opened a booking form', d.bookingOpeners], ['Booked (visit or video call)', d.visitBookings + d.videoBookings]] : [];
+  const funnel = d ? [['Sessions', d.sessions], ['Viewed a laptop', d.productViewers], ['Added to cart', d.cartAdders], ['Reached checkout', d.checkouts], ['Placed order (payment started)', d.ordersPlaced], ['Paid', d.ordersPaid]] : [];
   return (
     <>
       <h1>Analytics</h1>
@@ -35,12 +35,13 @@ export default function Traffic() {
         <>
           <div className="kpis">
             <Kpi label="Sessions" value={d.sessions} sub={`${d.visitors} visitors · ${d.pageViews} page views`} />
+            <Kpi label="Added to cart" value={d.cartAdders} sub={`${d.addToCartEvents} add-to-cart clicks`} />
+            <Kpi label="Payment started" value={d.ordersPlaced} sub={`${d.unpaid} not paid`} />
+            <Kpi label="Paid orders" value={d.ordersPaid} sub={`${inr(d.revenue)} revenue`} />
             <Kpi label="Viewed a laptop" value={d.productViewers} sub="sessions" />
-            <Kpi label="Shop visit bookings" value={d.visitBookings} sub="🏬 Visit & purchase" />
-            <Kpi label="Video call bookings" value={d.videoBookings} sub="📹 Order through video call" />
-            <Kpi label="Opened a booking form" value={d.bookingOpeners} sub="sessions" />
-            <Kpi label="Booking rate" value={d.bookingRate + '%'} sub="bookings ÷ sessions" />
-            <Kpi label="Paid online orders" value={d.ordersPaid} sub={`${inr(d.revenue)} · older online orders`} />
+            <Kpi label="Reached checkout" value={d.checkouts} sub="sessions" />
+            <Kpi label="Conversion rate" value={d.conversion + '%'} sub="paid orders ÷ sessions" />
+            <Kpi label="Revenue" value={inr(d.revenue)} sub={d.label} />
           </div>
           <div className="adm-grid">
             <div className="box"><h3>Sessions {d.seriesIsHours ? 'by hour' : 'by day'}</h3>
@@ -52,7 +53,7 @@ export default function Traffic() {
               {funnel.map(([l, v], i) => <div className="line" key={l}><span>{l}</span><b>{v}{i > 0 ? <small style={{ fontWeight: 400, marginLeft: 8, color: 'var(--muted)' }}>{pct(v, funnel[0][1])}</small> : null}</b></div>)}
             </div>
             <div className="box"><h3>Most viewed laptops</h3>
-              <Rows rows={d.topProducts} b="views" fmt={(r) => `${r.name} · ${r.carts} booking clicks`} />
+              <Rows rows={d.topProducts} b="views" fmt={(r) => `${r.name} · ${r.carts} in cart`} />
             </div>
             <div className="box"><h3>Where visitors come from</h3><Rows rows={d.sources} a="source" b="sessions" /></div>
             <div className="box"><h3>Top pages</h3><Rows rows={d.topPages} a="path" b="views" /></div>

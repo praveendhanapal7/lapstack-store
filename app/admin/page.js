@@ -15,6 +15,5 @@ export default async function Admin() {
       to_char(c.created_at at time zone 'utc','YYYY-MM-DD HH24:MI:SS') AS created_at, o.code, o.name, o.email,
       o.created_at AS purchased_at
     FROM warranty_claims c JOIN orders o ON o.id = c.order_id ORDER BY c.id DESC LIMIT 200`);
-  const enquiries = await q(`SELECT *, to_char(created_at at time zone 'utc','YYYY-MM-DD HH24:MI:SS') AS created_at FROM enquiries ORDER BY id DESC LIMIT 300`);
-  return <AdminClient products={products} orders={orders} sells={sells} claims={claims} enquiries={enquiries} stats={await getAnalytics()} />;
+  return <AdminClient products={products} orders={orders} sells={sells} claims={claims} stats={await getAnalytics()} />;
 }

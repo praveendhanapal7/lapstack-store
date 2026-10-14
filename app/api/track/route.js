@@ -1,7 +1,7 @@
 import { q } from '@/lib/db';
 export const dynamic = 'force-dynamic';
 
-const NAMES = ['page_view', 'view_product', 'add_to_cart', 'checkout', 'purchase', 'booking_open', 'enquiry'];
+const NAMES = ['page_view', 'view_product', 'add_to_cart', 'checkout', 'purchase'];
 const clip = (v, n) => String(v ?? '').slice(0, n);
 
 // Our own visitor counter (no personal data): one row per page view / shopping step.
