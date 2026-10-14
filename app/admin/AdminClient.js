@@ -254,7 +254,7 @@ export default function AdminClient({ products, orders, sells, claims = [], stat
                     <div><b style={{ fontSize: 18 }}>{r.brand} {r.model}</b><br /><small>{fmt(r.created_at)} · {r.name} · <a href={'tel:' + r.phone}>{r.phone}</a>{r.email ? ' · ' + r.email : ''}{r.city ? ' · ' + r.city : ''}</small></div>
                     <select className="inp" style={{ width: 160 }} value={r.status} onChange={(e) => patchSell(r.id, e.target.value)}>{SELL_ST.map((x) => <option key={x}>{x}</option>)}</select>
                   </div>
-                  <p style={{ margin: '10px 0' }}>{[r.cpu, r.ram, r.storage, r.condition].filter(Boolean).join(' · ')}<br />Purchased: {r.purchase_date || 'not given'} · Expected: {r.expected_price ? inr(r.expected_price) : 'not given'}</p>
+                  <p style={{ margin: '10px 0' }}>{[r.cpu, r.ram, r.storage, r.gpu, r.condition].filter(Boolean).join(' · ')}<br />Purchased: {r.purchase_date || 'not given'} · Expected: {r.expected_price ? inr(r.expected_price) : 'not given'}</p>
                   {r.notes ? <p className="muted">{r.notes}</p> : null}
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                     {r.photos.map((n) => <a key={n} href={'/api/admin/sell-file?u=' + encodeURIComponent(n)} target="_blank"><img src={'/api/admin/sell-file?u=' + encodeURIComponent(n)} alt="" style={{ width: 96, height: 72, objectFit: 'cover', borderRadius: 10 }} /></a>)}

@@ -462,3 +462,16 @@ h2.title,.contact h2,.sellcta h2{font-weight:600;letter-spacing:-.045em}
 .crop-box .h{position:absolute;width:18px;height:18px;background:#FDC500;border:2px solid #fff;border-radius:50%;touch-action:none}
 .crop-box .h.tl{left:-3px;top:-3px;cursor:nwse-resize}.crop-box .h.tr{right:-3px;top:-3px;cursor:nesw-resize}
 .crop-box .h.bl{left:-3px;bottom:-3px;cursor:nesw-resize}.crop-box .h.br{right:-3px;bottom:-3px;cursor:nwse-resize}
+/* sell form: graphics toggle + guided photo slots */
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 16px}
+.seg button{border:1.5px solid #d9d9de;background:#fff;border-radius:14px;padding:12px 14px;text-align:left;font:inherit;font-weight:600;font-size:15px;color:var(--ink);cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.seg button small{font-weight:500;font-size:12.5px;color:var(--muted)}
+.seg button.on{border-color:#1d1d1f;box-shadow:inset 0 0 0 1px #1d1d1f;background:#fffbea}
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.shot{position:relative;border:1.5px dashed #c9c9cf;border-radius:16px;background:#fafafa;padding:0 0 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;text-align:center;overflow:hidden;font:inherit;color:var(--ink)}
+.shot.has{border-style:solid;border-color:#1d1d1f;background:#fff}
+.shot.opt{opacity:.85}
+.shot img,.shotplus{width:100%;aspect-ratio:4/3;object-fit:cover;display:grid;place-items:center;font-size:30px;color:#b0b0b5;background:#f0f0f2;margin-bottom:8px}
+.shot b{font-size:13px;padding:0 6px}
+.shot small{font-size:11.5px;color:var(--muted);padding:0 6px}
+@media(max-width:600px){.shots{grid-template-columns:1fr 1fr}.seg{grid-template-columns:1fr}}
