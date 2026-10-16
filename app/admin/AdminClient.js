@@ -5,12 +5,13 @@ import { upload as blobUpload } from '@vercel/blob/client';
 import { inr, productImages } from '@/lib/format';
 import ImageManager from './ImageManager';
 import Traffic from './Traffic';
+import { LABELS } from '@/lib/category';
 
 const ORDER_ST = ['new', 'confirmed', 'shipped', 'delivered', 'cancelled'];
 const PAY_ST = ['pending', 'paid', 'failed', 'refunded', 'refund_pending', 'refunding'];
 const SELL_ST = ['new', 'contacted', 'purchased', 'rejected'];
 const CLAIM_ST = ['new', 'contacted', 'in_repair', 'resolved', 'rejected'];
-const blank = { name: '', cpu: '', ram: '', storage: '', display: '', gpu: '', price: '', stock: 1, image: '', images: [], note: '', warranty: false, active: true };
+const blank = { name: '', cpu: '', ram: '', storage: '', display: '', gpu: '', category: 'laptop', mrp: '', condition: '', price: '', stock: 1, image: '', images: [], note: '', warranty: false, active: true };
 const post = (url, method, body) => fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
 const fmt = (d) => new Date(d.replace(' ', 'T') + 'Z').toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
 
@@ -273,14 +274,19 @@ export default function AdminClient({ products, orders, sells, claims = [], stat
           <div className="panel">
             <h3 style={{ marginBottom: 12 }}>{edit.id ? 'Edit laptop' : 'Add laptop'}</h3>
             {err ? <div className="err">{err}</div> : null}
+            <label className="f">Type
+              <select value={edit.category || 'laptop'} onChange={s('category')}><option value="laptop">Laptop</option><option value="ram">RAM</option></select>
+            </label>
             <label className="f">Name<input value={edit.name} onChange={s('name')} /></label>
             <div className="row2">
-              <label className="f">Processor<input value={edit.cpu} onChange={s('cpu')} /></label>
-              <label className="f">Display<input value={edit.display} onChange={s('display')} /></label>
-              <label className="f">RAM<input value={edit.ram} onChange={s('ram')} /></label>
-              <label className="f">Storage<input value={edit.storage} onChange={s('storage')} /></label>
-              <label className="f">Graphics card <small className="muted">(leave empty if none)</small><input value={edit.gpu || ''} placeholder="e.g. NVIDIA RTX A2000 4GB" onChange={s('gpu')} /></label>
+              <label className="f">{LABELS[edit.category === 'ram' ? 'ram' : 'laptop'].cpu}<input value={edit.cpu} onChange={s('cpu')} /></label>
+              <label className="f">{LABELS[edit.category === 'ram' ? 'ram' : 'laptop'].display}<input value={edit.display} onChange={s('display')} /></label>
+              <label className="f">{LABELS[edit.category === 'ram' ? 'ram' : 'laptop'].ram}<input value={edit.ram} onChange={s('ram')} /></label>
+              <label className="f">{LABELS[edit.category === 'ram' ? 'ram' : 'laptop'].storage}<input value={edit.storage} onChange={s('storage')} /></label>
+              {edit.category === 'ram' ? null : <label className="f">Graphics card <small className="muted">(leave empty if none)</small><input value={edit.gpu || ''} placeholder="e.g. NVIDIA RTX A2000 4GB" onChange={s('gpu')} /></label>}
+              <label className="f">Condition <small className="muted">(optional)</small><input value={edit.condition || ''} placeholder="e.g. Open box · Brand new, not used" onChange={s('condition')} /></label>
               <label className="f">Price (₹)<input type="number" value={edit.price} onChange={s('price')} /></label>
+              <label className="f">Online price (₹, shown crossed out, optional)<input type="number" value={edit.mrp || ''} onChange={s('mrp')} /></label>
               <label className="f">Stock<input type="number" min="0" value={edit.stock} onChange={s('stock')} /></label>
             </div>
             <label className="f">Note<input value={edit.note} onChange={s('note')} /></label>

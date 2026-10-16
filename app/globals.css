@@ -475,3 +475,6 @@ h2.title,.contact h2,.sellcta h2{font-weight:600;letter-spacing:-.045em}
 .shot b{font-size:13px;padding:0 6px}
 .shot small{font-size:11.5px;color:var(--muted);padding:0 6px}
 @media(max-width:600px){.shots{grid-template-columns:1fr 1fr}.seg{grid-template-columns:1fr}}
+.mrp{display:block;font-size:14px;font-weight:500;color:var(--muted);margin-top:4px;letter-spacing:0}
+.mrp s{margin:0 4px}.mrp b{color:#166534}
+.cardmrp{font-size:13px;font-weight:500;color:var(--muted);margin-left:8px}

@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 const WA = process.env.NEXT_PUBLIC_WHATSAPP || '919345145774';
 
 export default async function Home() {
-  const all = await listProducts();
+  const all = await listProducts({ category: 'laptop' });
   const featured = all.filter((p) => p.stock > 0).slice(0, 6);
   const count = (b) => all.filter((p) => band(p.price) === b && p.stock > 0).length;
   // Hero photos: one clean product shot per brand (uploaded posters/banners are skipped), Lenovo in the middle.

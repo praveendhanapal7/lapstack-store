@@ -17,6 +17,7 @@ export default function Header() {
         <nav className="links">
           <Link href="/">Home</Link>
           <Link href="/laptops">Laptops</Link>
+          <Link href="/ram">RAM</Link>
           <Link href="/sell">Sell</Link>
           <Link href="/about">About</Link>
           <Link href="/contact">Contact</Link>
@@ -29,6 +30,7 @@ export default function Header() {
         <nav className="mobnav" onClick={close}>
           <Link href="/">Home</Link>
           <Link href="/laptops">Laptops</Link>
+          <Link href="/ram">RAM</Link>
           <Link href="/sell">Sell your laptop</Link>
           <Link href="/about">About us</Link>
           <Link href="/contact">Contact</Link>

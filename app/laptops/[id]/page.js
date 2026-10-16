@@ -6,6 +6,7 @@ import { inr, productImages } from '@/lib/format';
 import Gallery from '@/components/Gallery';
 import AddToCart from '@/components/AddToCart';
 import PixelViewContent from '@/components/PixelViewContent';
+import { LABELS, catOf } from '@/lib/category';
 export const dynamic = 'force-dynamic';
 
 // Shared links (WhatsApp, Instagram) preview the laptop's photo, name and price.
@@ -29,26 +30,31 @@ export default async function Detail({ params }) {
   const WA = process.env.NEXT_PUBLIC_WHATSAPP || '919345145774';
   // Suggestions: other laptops in stock, same brand first, then closest in price.
   const brand = p.name.split(' ')[0];
-  const suggested = (await listProducts())
+  const cat = catOf(p), L = LABELS[cat];
+  const suggested = (await listProducts({ category: cat }))
     .filter((x) => x.id !== p.id && x.stock > 0)
     .sort((a, b) => (b.name.startsWith(brand) - a.name.startsWith(brand)) || Math.abs(a.price - p.price) - Math.abs(b.price - p.price))
     .slice(0, 4);
-  const rows = [['Processor', p.cpu], ['Graphics card', p.gpu], ['Memory', p.ram], ['Storage', p.storage], ['Display', p.display], ['Warranty', '6 months: 3 months full warranty + 3 months service support'], ['Availability', p.stock > 0 ? 'In stock' : 'Sold out']].filter((r) => r[1]);
+  const rows = (cat === 'ram'
+    ? [[L.ram, p.ram], [L.cpu, p.cpu], [L.storage, p.storage], [L.display, p.display], ['Condition', p.condition]]
+    : [['Processor', p.cpu], ['Graphics card', p.gpu], ['Memory', p.ram], ['Storage', p.storage], ['Display', p.display], ['Condition', p.condition], ['Warranty', '6 months: 3 months full warranty + 3 months service support']]
+  ).concat([['Availability', p.stock > 0 ? 'In stock' : 'Sold out']]).filter((r) => r[1]);
+  const off = p.mrp > p.price ? Math.round((1 - p.price / p.mrp) * 100) : 0;
   return (
     <div className="wrap">
       <div className="detail">
         <PixelViewContent id={p.id} name={p.name} price={p.price} />
         <Gallery images={productImages(p)} alt={p.name} />
         <div>
-          <div className="eyebrow">Refurbished</div>
+          <div className="eyebrow">{cat === 'ram' ? (p.condition ? 'Open box' : 'RAM') : 'Refurbished'}</div>
           <h1 style={{ fontSize: 44 }}>{p.name}</h1>
-          <div className="price" style={{ fontSize: 30, margin: '14px 0 6px' }}>{inr(p.price)}</div>
+          <div className="price" style={{ fontSize: 30, margin: '14px 0 6px' }}>{inr(p.price)}{off ? <span className="mrp">Online price <s>{inr(p.mrp)}</s> <b>{off}% off</b></span> : null}</div>
           <p className="eta">🚚 Delivered in 2 days</p>
           <table className="spec-table"><tbody>{rows.map(([k, v]) => <tr key={k}><td>{k}</td><td>{v}</td></tr>)}</tbody></table>
           {p.note ? <p style={{ color: 'var(--muted)' }}>{p.note}</p> : null}
           <AddToCart id={p.id} stock={p.stock} name={p.name} price={p.price} />
-          <p style={{ marginTop: 18 }}><a href={`https://wa.me/${WA}?text=${encodeURIComponent('Hi, I am interested in ' + p.name)}`} style={{ fontWeight: 700, textDecoration: 'underline' }}>Ask about this laptop on WhatsApp</a></p>
-          <p style={{ fontSize: 12, color: 'var(--muted)' }}>Photo is representative of the model.</p>
+          <p style={{ marginTop: 18 }}><a href={`https://wa.me/${WA}?text=${encodeURIComponent('Hi, I am interested in ' + p.name)}`} style={{ fontWeight: 700, textDecoration: 'underline' }}>{cat === 'ram' ? 'Ask about this RAM on WhatsApp' : 'Ask about this laptop on WhatsApp'}</a></p>
+          {cat === 'laptop' ? <p style={{ fontSize: 12, color: 'var(--muted)' }}>Photo is representative of the model.</p> : null}
         </div>
       </div>
       <section className="suggest">
@@ -58,7 +64,7 @@ export default async function Detail({ params }) {
             <div className="grid">{suggested.map((x) => <ProductCard key={x.id} p={x} />)}</div>
           </>
         ) : null}
-        <p style={{ marginTop: 28, textAlign: 'center' }}><Link className="btn ghost" href="/laptops">See all laptops →</Link></p>
+        <p style={{ marginTop: 28, textAlign: 'center' }}><Link className="btn ghost" href={cat === 'ram' ? '/ram' : '/laptops'}>{cat === 'ram' ? 'See all RAM →' : 'See all laptops →'}</Link></p>
       </section>
     </div>
   );

@@ -9,7 +9,7 @@ const TABS = [['', 'All'], ['low', 'Up to ₹25,000'], ['mid', '₹25,001–35,0
 export default async function Laptops({ searchParams }) {
   const sp = await searchParams;
   const b = ['low', 'mid', 'high'].includes(sp?.b) ? sp.b : '';
-  const rows = (await listProducts()).filter((p) => !b || band(p.price) === b);
+  const rows = (await listProducts({ category: 'laptop' })).filter((p) => !b || band(p.price) === b);
   return (
     <div className="wrap" style={{ padding: '40px 20px' }}>
       <h1 style={{ fontSize: 56, marginBottom: 28 }}>Laptops</h1>
